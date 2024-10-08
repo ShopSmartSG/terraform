@@ -12,6 +12,7 @@ on:
         default: 'apply'
         options:
           - plan
+          - plan-destroy
           - apply
           - destroy
 
@@ -39,7 +40,12 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        run: terraform plan -out=plan.out
+        run: |
+          if [ github.event.inputs.action == "plan" || github.event.inputs.action == "apply" ]; then
+            terraform plan -var="aws_region=${{ secrets.AWS_REGION }}" -out=plan.out
+          else
+            terraform plan -var="aws_region=${{ secrets.AWS_REGION }}" -destroy -out=plan.out
+          fi
 
       - name: Upload Plan
         uses: actions/upload-artifact@v3
@@ -72,10 +78,10 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan (Re-plan)
-        run: terraform plan -out=plan.out
+        run: terraform plan -var="aws_region=${{ secrets.AWS_REGION }}" -out=plan.out
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve plan.out
+        run: terraform apply -var="aws_region=${{ secrets.AWS_REGION }}" -auto-approve plan.out
 
   terraform-destroy:
     name: Destroy Infrastructure
@@ -102,7 +108,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan (Re-plan)
-        run: terraform plan -out=destroy.out
+        run: terraform plan -var="aws_region=${{ secrets.AWS_REGION }}" -destroy -out=destroy.out
 
       - name: Terraform Apply Destroy
-        run: terraform apply -auto-approve destroy.out
+        run: terraform apply -var="aws_region=${{ secrets.AWS_REGION }}" -auto-approve destroy.out
