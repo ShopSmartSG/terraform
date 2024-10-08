@@ -1,6 +1,13 @@
 provider "aws" {
-  region = "us-east-1" # Change this if you prefer another region
+  region = var.aws_region # Change this if you prefer another region
 }
+
+variable "aws_region" {
+  description = "AWS region to deploy resources"
+  type        = string
+  default     = "us-east-1" # Optional: a default value
+}
+
 
 resource "aws_security_group" "allow_http" {
   name = "allow_http_temptest"
