@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_security_group" "allow_http" {
-  name        = "allow_http"
+  name = "allow_http_temptest"
   description = "Allow HTTP inbound traffic"
 
   ingress {
