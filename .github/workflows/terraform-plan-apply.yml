@@ -69,13 +69,14 @@ jobs:
           path: .
 
       - name: Wait for Manual Approval
-        id: approval
-        uses: peter-evans/repository-dispatch@v2
+        uses: 'dorny/paths-filter@v2'
         with:
-          event-type: manual-approval
-          client-payload: '{"action": "approve"}'
-        # This waits for an interactive approval from GitHub Actions UI
+          filters: |
+            approval:
+              paths:
+                - "approve/*"
+          # This allows you to pause the pipeline for manual approval via GitHub UI
 
       - name: Terraform Apply
-        if: github.event.client_payload.action == 'approve'
+        if: success() # Proceeds only if manually approved
         run: terraform apply -auto-approve plan.out
