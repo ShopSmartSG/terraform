@@ -3,7 +3,7 @@ name: Terraform Plan and Apply
 on:
   pull_request:
     branches:
-      - ops-dev
+      - main
 
 jobs:
   terraform:
