@@ -1,6 +1,9 @@
-name: Terraform Destroy
+name: Terraform Management
 
 on:
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       action:
@@ -8,14 +11,14 @@ on:
         required: true
         default: 'apply'
         options:
-          - plan-only
-          - plan-destroy
+          - plan
+          - apply
+          - destroy
 
 jobs:
-  terraform-plan-destroy:
-    name: Plan Infrastructure Destruction
+  terraform-plan:
+    name: Plan Infrastructure Changes
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -35,22 +38,50 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Plan Destroy
-        id: plan
-        run: terraform plan -destroy -out=destroy.out
+      - name: Terraform Plan
+        run: terraform plan -out=plan.out
 
-      - name: Upload Destroy Plan
+      - name: Upload Plan
         uses: actions/upload-artifact@v3
         with:
-          name: terraform-destroy-plan
-          path: destroy.out
+          name: terraform-plan
+          path: plan.out
 
-  terraform-apply-destroy:
-    name: Apply Infrastructure Destruction
+  terraform-apply:
+    name: Apply Infrastructure Changes
     runs-on: ubuntu-latest
-    needs: terraform-plan-destroy
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'plan-destroy'
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'apply'
+    needs: terraform-plan
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan (Re-plan)
+        run: terraform plan -out=plan.out
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve plan.out
+
+  terraform-destroy:
+    name: Destroy Infrastructure
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy'
+    needs: terraform-plan
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
