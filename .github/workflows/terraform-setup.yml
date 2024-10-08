@@ -2,6 +2,15 @@ name: Terraform Setup
 
 on:
   workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Select the branch'
+        required: true
+        default: 'ops-dev'
+        type: choice
+        options:
+          - ops-dev
+          - main
 
 jobs:
   terraform:
