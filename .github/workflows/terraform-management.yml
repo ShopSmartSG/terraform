@@ -9,7 +9,7 @@ on:
       action:
         description: 'Choose action to perform'
         required: true
-        default: 'apply'
+        default: 'plan'
         options:
           - plan
           - plan-destroy
