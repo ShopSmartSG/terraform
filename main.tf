@@ -8,6 +8,9 @@ variable "aws_region" {
   default     = "us-east-1" # Optional: a default value
 }
 
+module "iam_roles" {
+  source = "./iam_roles"
+}
 
 # resource "aws_security_group" "allow_http" {
 #   name = "allow_http_temptest"
