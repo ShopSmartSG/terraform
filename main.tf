@@ -12,6 +12,21 @@ module "iam_roles" {
   source = "./iam_roles"
 }
 
+module "vpc" {
+  source = "./vpc"
+}
+
+module "eks" {
+  source = "./eks"
+  cluster_name  = "shopsmart-cluster"
+  public_subnet_ids = module.vpc.public_subnet_ids
+  private_subnet_ids = module.vpc.private_subnet_ids
+  eks_cluster_role_arn = module.iam_roles.eks_cluster_role_arn
+  eks_cluster_role_name = module.iam_roles.eks_cluster_role_name
+  eks_node_role_arn = module.iam_roles.eks_node_role_arn
+  eks_node_role_name = module.iam_roles.eks_node_role_name
+}
+
 # resource "aws_security_group" "allow_http" {
 #   name = "allow_http_temptest"
 #   description = "Allow HTTP inbound traffic"
