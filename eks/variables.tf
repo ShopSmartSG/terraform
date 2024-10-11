@@ -67,8 +67,8 @@ variable "nodegroup_config" {
       name          = "shopsmart2"
       ami_type      = "CUSTOM" ##AL2_x86_64
       instance_type = "t2.micro"
-      desired_size  = 1
-      min_size      = 1
+      desired_size  = 0
+      min_size      = 0
       max_size      = 1
       labels        = {
         "ng_id" = "ss2",

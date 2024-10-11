@@ -93,40 +93,41 @@ resource "aws_route_table_association" "public_association_2" {
 }
 
 # NAT Gateway for Private Subnets (if needed later for EKS, RDS, etc.)
-# resource "aws_eip" "nat" {
-#   vpc = true
-# }
+resource "aws_eip" "nat" {
+  domain = "vpc"
+}
 
-# resource "aws_nat_gateway" "nat" {
-#   allocation_id = aws_eip.nat.id
-#   subnet_id     = aws_subnet.public_subnet_1.id
-#
-#   tags = {
-#     Name = "main-nat-gateway"
-#   }
-# }
+
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.public_subnet_1.id
+
+  tags = {
+    Name = "main-nat-gateway"
+  }
+}
 
 # Route Table for Private Subnets
-# resource "aws_route_table" "private_rt" {
-#   vpc_id = aws_vpc.main.id
-#
-#   route {
-#     cidr_block     = "0.0.0.0/0"
-#     nat_gateway_id = aws_nat_gateway.nat.id
-#   }
-#
-#   tags = {
-#     Name = "private-route-table"
-#   }
-# }
+resource "aws_route_table" "private_rt" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat.id
+  }
+
+  tags = {
+    Name = "private-route-table"
+  }
+}
 
 # Associate Route Table with Private Subnets
-# resource "aws_route_table_association" "private_association_1" {
-#   subnet_id      = aws_subnet.private_subnet_1.id
-#   route_table_id = aws_route_table.private_rt.id
-# }
-#
-# resource "aws_route_table_association" "private_association_2" {
-#   subnet_id      = aws_subnet.private_subnet_2.id
-#   route_table_id = aws_route_table.private_rt.id
-# }
+resource "aws_route_table_association" "private_association_1" {
+  subnet_id      = aws_subnet.private_subnet_1.id
+  route_table_id = aws_route_table.private_rt.id
+}
+
+resource "aws_route_table_association" "private_association_2" {
+  subnet_id      = aws_subnet.private_subnet_2.id
+  route_table_id = aws_route_table.private_rt.id
+}
