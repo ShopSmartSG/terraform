@@ -49,7 +49,7 @@ variable "nodegroup_config" {
   default = [
     {
       name          = "shopsmart1"
-      ami_type      = "AL2_x86_64"
+      ami_type      = "CUSTOM" ##AL2_x86_64
       instance_type = "t2.micro"
       desired_size  = 1
       min_size      = 1
@@ -65,7 +65,7 @@ variable "nodegroup_config" {
     },
     {
       name          = "shopsmart2"
-      ami_type      = "AL2_x86_64"
+      ami_type      = "CUSTOM" ##AL2_x86_64
       instance_type = "t2.micro"
       desired_size  = 1
       min_size      = 1
