@@ -25,6 +25,14 @@ module "eks" {
   eks_cluster_role_name = module.iam_roles.eks_cluster_role_name
   eks_node_role_arn = module.iam_roles.eks_node_role_arn
   eks_node_role_name = module.iam_roles.eks_node_role_name
+  vpc_main_id = module.vpc.main_vpc_id
+  vpc_main_cidr_block = module.vpc.main_vpc_cidr_block
+  iam_eks_cluster_policy_attachment = module.iam_roles.iam_eks_cluster_policy_attachment.policy_arn
+  iam_eks_node_policy_attachment = module.iam_roles.iam_eks_node_policy_attachment.policy_arn
+  iam_eks_cni_policy_attachment = module.iam_roles.iam_eks_cni_policy_attachment.policy_arn
+  iam_eks_registry_policy_attachment = module.iam_roles.iam_eks_registry_policy_attachment.policy_arn
+  eks_sg_id = module.vpc.eks_cluster_sg_id
+  eks_nodes_sg_id = module.vpc.eks_node_sg_id
 }
 
 # resource "aws_security_group" "allow_http" {

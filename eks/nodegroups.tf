@@ -7,6 +7,7 @@ resource "aws_eks_node_group" "node_group" {
   subnet_ids      = var.private_subnet_ids
 
   ami_type        = each.value.ami_type
+  capacity_type  = each.value.capacity_type
 
   scaling_config {
     desired_size = each.value.desired_size
@@ -14,10 +15,14 @@ resource "aws_eks_node_group" "node_group" {
     min_size     = each.value.min_size
   }
 
-  launch_template {
-    id      = aws_launch_template.eks_launch_template.id
-    version = "$Latest"
-  }
+  # launch_template {
+  #   id      = aws_launch_template.eks_launch_template.id
+  #   version = "$Latest"
+  # }
+
+  # remote_access {
+  #   source_security_group_ids = [var.eks_nodes_sg_id]
+  # }
 
   instance_types = [each.value.instance_type]
 
@@ -27,7 +32,14 @@ resource "aws_eks_node_group" "node_group" {
     each.value.tags,
     {
       createdBy = "terraform"
-      createdAt = timestamp()
     }
   )
+
+  depends_on = [
+
+    var.iam_eks_node_policy_attachment,
+    var.iam_eks_cni_policy_attachment,
+    var.iam_eks_registry_policy_attachment
+
+  ]
 }
