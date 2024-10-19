@@ -70,6 +70,11 @@ variable "eks_nodes_sg_id" {
     type = string
 }
 
+variable "acm_public_cert_arn" {
+  description = "ARN of the public ACM certificate"
+  type        = string
+}
+
 variable "nodegroup_config" {
   description = "Node group configurations"
   type        = list(object({
@@ -89,8 +94,8 @@ variable "nodegroup_config" {
       ami_type      = "AL2_x86_64" ##CUSTOM
       capacity_type = "ON_DEMAND"
       instance_type = "t2.micro"
-      desired_size  = 1
-      min_size      = 1
+      desired_size  = 0
+      min_size      = 0
       max_size      = 1
       labels        = {
         "ng_id" = "ss1",
@@ -118,6 +123,24 @@ variable "nodegroup_config" {
         "environment" = "dev",
         "set" = "shopsmart-2",
         createdAt = "15/10/2025"
+      }
+    },
+    {
+      name          = "ss-traefik"
+      ami_type      = "AL2_x86_64" ##CUSTOM
+      capacity_type = "ON_DEMAND"
+      instance_type = "t3a.medium"
+      desired_size  = 1
+      min_size      = 1
+      max_size      = 2
+      labels        = {
+        "ng_id" = "ss-traefik",
+        "ss-traefik" = "true"
+      }
+      tags = {
+        "environment" = "dev",
+        "set" = "ss-traefik",
+        createdAt = "20/10/2025"
       }
     }
   ]

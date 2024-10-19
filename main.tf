@@ -37,6 +37,7 @@ module "eks" {
   iam_eks_registry_policy_attachment = module.iam_roles.iam_eks_registry_policy_attachment.policy_arn
   eks_sg_id = module.vpc.eks_cluster_sg_id
   eks_nodes_sg_id = module.vpc.eks_node_sg_id
+  acm_public_cert_arn = module.ssl_cert.certificate_arn
 }
 
 # resource "aws_security_group" "allow_http" {

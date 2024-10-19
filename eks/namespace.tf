@@ -3,3 +3,9 @@ resource "kubernetes_namespace" "shop_smart" {
     name = "shop-smart"
   }
 }
+
+resource "kubernetes_namespace" "traefik" {
+  metadata {
+    name = "traefik"
+  }
+}
