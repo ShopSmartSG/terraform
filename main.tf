@@ -16,6 +16,10 @@ module "vpc" {
   source = "./vpc"
 }
 
+module "ssl_cert" {
+  source = "./ssl_cert"
+}
+
 module "eks" {
   source = "./eks"
   cluster_name  = "shopsmart-cluster"
