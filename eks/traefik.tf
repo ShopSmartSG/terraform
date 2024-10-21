@@ -13,7 +13,7 @@ provider "helm" {
 
 resource "helm_release" "traefik-public" {
   name       = "traefik-public"
-  namespace  = kubernetes_namespace.traefik.metadata.0.name
+  namespace  = kubernetes_namespace.traefik.metadata[0].name
   repository = "https://traefik.github.io/charts"
   chart      = "traefik"
   cleanup_on_fail = true
@@ -25,6 +25,8 @@ service:
     service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
     service.beta.kubernetes.io/aws-load-balancer-type: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
   name: traefik-public
 ingressClass:
   enabled: true
@@ -51,7 +53,7 @@ EOF
 
 resource "helm_release" "traefik-private" {
   name       = "traefik-private"
-  namespace  = kubernetes_namespace.traefik.metadata.0.name
+  namespace  = kubernetes_namespace.traefik.metadata[0].name
   repository = "https://traefik.github.io/charts"
   chart      = "traefik"
   cleanup_on_fail = true
@@ -63,6 +65,8 @@ service:
     service.beta.kubernetes.io/aws-load-balancer-scheme: internal
     service.beta.kubernetes.io/aws-load-balancer-type: alb
     alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
   name: traefik-private
 ingressClass:
   enabled: true
