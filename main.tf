@@ -18,6 +18,7 @@ module "vpc" {
 
 module "ssl_cert" {
   source = "./ssl_cert"
+  rds_endpoint = module.rds.postgres_endpoint
 }
 
 module "eks" {
@@ -38,6 +39,13 @@ module "eks" {
   eks_sg_id = module.vpc.eks_cluster_sg_id
   eks_nodes_sg_id = module.vpc.eks_node_sg_id
   acm_public_cert_arn = module.ssl_cert.certificate_arn
+}
+
+module "rds" {
+  source = "./rds"
+  private_subnet_ids = module.vpc.private_subnet_ids
+  zone_id = module.ssl_cert.hosted_zone_id
+  vpc_id = module.vpc.main_vpc_id
 }
 
 # resource "aws_security_group" "allow_http" {

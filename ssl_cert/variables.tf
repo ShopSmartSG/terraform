@@ -2,3 +2,8 @@
 #   description = "The ID of the Route 53 hosted zone"
 #   type        = string
 # }
+
+variable "rds_endpoint" {
+  description = "The RDS endpoint"
+  type        = string
+}
