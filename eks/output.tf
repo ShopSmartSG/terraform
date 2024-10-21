@@ -27,3 +27,13 @@ output "cluster_name" {
   description = "EKS cluster name"
   value = var.cluster_name
 }
+
+output "traefik_public_dns_name" {
+  description = "Traefik public ALB DNS name"
+  value = aws_lb.public_alb.dns_name
+}
+
+output "traefik_private_dns_name" {
+  description = "Traefik private ALB DNS name"
+  value = aws_lb.private_alb.dns_name
+}

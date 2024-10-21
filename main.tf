@@ -20,6 +20,8 @@ module "ssl_cert" {
   source = "./ssl_cert"
   rds_endpoint = module.rds.postgres_endpoint
   vpc_id = module.vpc.main_vpc_id
+  public_traefik_alb_dns_name = module.eks.traefik_public_dns_name
+  private_traefik_alb_dns_name = module.eks.traefik_private_dns_name
 }
 
 module "eks" {
@@ -39,6 +41,8 @@ module "eks" {
   iam_eks_registry_policy_attachment = module.iam_roles.iam_eks_registry_policy_attachment.policy_arn
   eks_sg_id = module.vpc.eks_cluster_sg_id
   eks_nodes_sg_id = module.vpc.eks_node_sg_id
+  alb_public_sg_id = module.vpc.alb_public_sg_id
+  alb_private_sg_id = module.vpc.alb_private_sg_id
   acm_public_cert_arn = module.ssl_cert.certificate_arn
   r53_private_zone_id = module.ssl_cert.private_zone_id
 }

@@ -3,16 +3,8 @@ resource "aws_route53_zone" "main" {
 }
 
 resource "aws_route53_zone" "ss_private" {
-  name = "ss.aws.com"
+  name = "ss.aws.local"
   vpc {
     vpc_id = var.vpc_id  # Replace with your VPC ID
   }
-}
-
-resource "aws_route53_record" "rds_cname" {
-  zone_id = aws_route53_zone.main.zone_id
-  name    = "postgres01.ss.aws.com"
-  type    = "CNAME"
-  ttl     = 300
-  records = [var.rds_endpoint]
 }

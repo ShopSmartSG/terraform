@@ -81,3 +81,74 @@ resource "aws_security_group" "eks_node_sg" {
     Name = "eks-node-sg"
   }
 }
+
+resource "aws_security_group" "public_alb_sg" {
+  name        = "public-alb-sg"
+  description = "Security group for Public ALB"
+  vpc_id      = aws_vpc.main.id
+
+  # Allow HTTP traffic from anywhere
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow HTTPS traffic from anywhere
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Egress - Allow all outbound traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "public-alb-sg"
+  }
+}
+
+
+resource "aws_security_group" "private_alb_sg" {
+  name        = "private-alb-sg"
+  description = "Security group for Private ALB"
+  vpc_id      = aws_vpc.main.id
+
+  # Allow HTTP traffic from within the VPC (replace with your VPC CIDR block)
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # VPC CIDR block or specific trusted CIDR blocks
+    # make the above later aws_vpc.main.cidr_block
+  }
+
+  # Allow HTTPS traffic from within the VPC (replace with your VPC CIDR block)
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # VPC CIDR block or specific trusted CIDR blocks
+    # make the above later aws_vpc.main.cidr_block
+  }
+
+  # Egress - Allow all outbound traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "private-alb-sg"
+  }
+}

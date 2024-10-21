@@ -70,6 +70,16 @@ variable "eks_nodes_sg_id" {
     type = string
 }
 
+variable "alb_public_sg_id" {
+  description = "ALB public Security Group ID"
+  type = string
+}
+
+variable "alb_private_sg_id" {
+  description = "ALB private Security Group ID"
+  type = string
+}
+
 variable "acm_public_cert_arn" {
   description = "ARN of the public ACM certificate"
   type        = string

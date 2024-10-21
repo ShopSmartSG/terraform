@@ -27,3 +27,13 @@ output "eks_node_sg_id" {
   description = "EKS Node Security Group ID"
   value = aws_security_group.eks_node_sg.id
 }
+
+output "alb_public_sg_id" {
+  description = "Public ALB Security Group ID"
+  value = aws_security_group.public_alb_sg.id
+}
+
+output "alb_private_sg_id" {
+  description = "Private ALB Security Group ID"
+  value = aws_security_group.private_alb_sg.id
+}
