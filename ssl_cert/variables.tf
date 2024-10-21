@@ -7,3 +7,8 @@ variable "rds_endpoint" {
   description = "The RDS endpoint"
   type        = string
 }
+
+variable "vpc_id" {
+  description = "The VPC ID"
+  type        = string
+}

@@ -19,6 +19,7 @@ module "vpc" {
 module "ssl_cert" {
   source = "./ssl_cert"
   rds_endpoint = module.rds.postgres_endpoint
+  vpc_id = module.vpc.main_vpc_id
 }
 
 module "eks" {
@@ -39,6 +40,7 @@ module "eks" {
   eks_sg_id = module.vpc.eks_cluster_sg_id
   eks_nodes_sg_id = module.vpc.eks_node_sg_id
   acm_public_cert_arn = module.ssl_cert.certificate_arn
+  r53_private_zone_id = module.ssl_cert.private_zone_id
 }
 
 module "rds" {

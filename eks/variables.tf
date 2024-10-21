@@ -75,6 +75,11 @@ variable "acm_public_cert_arn" {
   type        = string
 }
 
+variable "r53_private_zone_id" {
+  description = "Route 53 Private Zone ID"
+  type        = string
+}
+
 variable "nodegroup_config" {
   description = "Node group configurations"
   type        = list(object({
@@ -144,4 +149,39 @@ variable "nodegroup_config" {
       }
     }
   ]
+}
+
+variable "ingress_rules" {
+  type = map(object({
+    host = string
+    service_name = string
+    service_port = number
+  }))
+  default = {
+    profile_service = {
+      host = "profile-service.ss.aws.local"
+      service_name = "profile-service"
+      service_port = 80
+    }
+    product_service = {
+      host = "product-service.ss.aws.local"
+      service_name = "product-service"
+      service_port = 80
+    }
+    order_service = {
+      host = "order-service.ss.aws.local"
+      service_name = "order-service"
+      service_port = 80
+    }
+  }
+}
+
+
+variable "dns_records" {
+  type = map(string)
+  default = {
+    "profile-service.ss.aws.local" = "profile-service"
+    "product-service.ss.aws.local" = "product-service"
+    "order-service.ss.aws.local"   = "order-service"
+  }
 }
