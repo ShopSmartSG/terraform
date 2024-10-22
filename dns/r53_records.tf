@@ -1,5 +1,5 @@
 resource "aws_route53_record" "rds_cname" {
-  zone_id = aws_route53_zone.main.zone_id
+  zone_id = aws_route53_zone.ss_public.zone_id
   name    = "postgres01.shopsmartsg.com"
   type    = "CNAME"
   ttl     = 300
@@ -7,7 +7,7 @@ resource "aws_route53_record" "rds_cname" {
 }
 
 resource "aws_route53_record" "redis_cname" {
-  zone_id = aws_route53_zone.main.zone_id
+  zone_id = aws_route53_zone.ss_public.zone_id
   name    = "redis.shopsmartsg.com"
   type    = "CNAME"
   ttl     = 300
@@ -17,7 +17,7 @@ resource "aws_route53_record" "redis_cname" {
 resource "aws_route53_record" "public_service_cname" {
   for_each = toset(var.public_endpoints)
 
-  zone_id = aws_route53_zone.main.zone_id
+  zone_id = aws_route53_zone.ss_public.zone_id
   name    = each.value
   type    = "CNAME"
   ttl     = 300

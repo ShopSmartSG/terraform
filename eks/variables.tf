@@ -85,11 +85,6 @@ variable "acm_public_cert_arn" {
   type        = string
 }
 
-variable "r53_private_zone_id" {
-  description = "Route 53 Private Zone ID"
-  type        = string
-}
-
 variable "nodegroup_config" {
   description = "Node group configurations"
   type        = list(object({

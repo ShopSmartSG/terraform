@@ -12,13 +12,3 @@ output "certificate_private_key" {
   description = "The private key of the issued certificate"
   value       = aws_acm_certificate.ss_aws_cert.private_key
 }
-
-output "hosted_zone_id" {
-  description = "The Route 53 hosted zone ID"
-  value       = aws_route53_zone.main.zone_id
-}
-
-output "private_zone_id" {
-  description = "The Route 53 private hosted zone ID"
-  value       = aws_route53_zone.ss_private.zone_id
-}

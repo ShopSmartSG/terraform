@@ -16,13 +16,18 @@ module "vpc" {
   source = "./vpc"
 }
 
-module "ssl_cert" {
-  source = "./ssl_cert"
+module "dns" {
+  source = "./dns"
   rds_endpoint = module.rds.postgres_endpoint
   vpc_id = module.vpc.main_vpc_id
   public_traefik_alb_dns_name = module.eks.traefik_public_dns_name
   private_traefik_alb_dns_name = module.eks.traefik_private_dns_name
   redis_endpoint = module.redis.redis_endpoint
+}
+
+module "ssl_cert" {
+  source = "./ssl_cert"
+  zone_id = module.dns.public_zone_id
 }
 
 module "eks" {
@@ -45,13 +50,11 @@ module "eks" {
   alb_public_sg_id = module.vpc.alb_public_sg_id
   alb_private_sg_id = module.vpc.alb_private_sg_id
   acm_public_cert_arn = module.ssl_cert.certificate_arn
-  r53_private_zone_id = module.ssl_cert.private_zone_id
 }
 
 module "rds" {
   source = "./rds"
   private_subnet_ids = module.vpc.private_subnet_ids
-  zone_id = module.ssl_cert.hosted_zone_id
   vpc_id = module.vpc.main_vpc_id
 }
 
