@@ -11,7 +11,7 @@ resource "aws_route53_record" "redis_cname" {
   name    = "redis.shopsmartsg.com"
   type    = "CNAME"
   ttl     = 300
-  records = [var.rds_endpoint]
+  records = [var.redis_endpoint]
 }
 
 resource "aws_route53_record" "public_service_cname" {
