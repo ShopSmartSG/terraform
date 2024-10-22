@@ -24,13 +24,13 @@ resource "aws_route53_record" "cert_validation" {
   records = [each.value.record]
 
   # Ensure the DNS validation record is created before the certificate is validated
-  # depends_on = [aws_acm_certificate.ss_aws_cert]
+  depends_on = [aws_acm_certificate.ss_aws_cert]
 }
 #
-# resource "aws_acm_certificate_validation" "ss_aws_cert_validation" {
-#   certificate_arn = aws_acm_certificate.ss_aws_cert.arn
-#
-#   validation_record_fqdns = [
-#     for r in aws_route53_record.cert_validation : r.fqdn
-#   ]
-# }
+resource "aws_acm_certificate_validation" "ss_aws_cert_validation" {
+  certificate_arn = aws_acm_certificate.ss_aws_cert.arn
+
+  validation_record_fqdns = [
+    for r in aws_route53_record.cert_validation : r.fqdn
+  ]
+}
