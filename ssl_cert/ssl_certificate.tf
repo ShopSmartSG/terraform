@@ -1,6 +1,6 @@
 resource "aws_acm_certificate" "ss_aws_cert" {
-  domain_name       = "*.ss.aws.com"
-  subject_alternative_names = ["*.ss.aws.com"]
+  domain_name       = "*.shopsmartsg.com"
+  subject_alternative_names = ["*.shopsmartsg.com"]
   validation_method = "DNS"
 
   tags = {

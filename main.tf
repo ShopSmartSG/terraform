@@ -22,6 +22,7 @@ module "ssl_cert" {
   vpc_id = module.vpc.main_vpc_id
   public_traefik_alb_dns_name = module.eks.traefik_public_dns_name
   private_traefik_alb_dns_name = module.eks.traefik_private_dns_name
+  redis_endpoint = module.redis.redis_endpoint
 }
 
 module "eks" {
@@ -52,6 +53,12 @@ module "rds" {
   private_subnet_ids = module.vpc.private_subnet_ids
   zone_id = module.ssl_cert.hosted_zone_id
   vpc_id = module.vpc.main_vpc_id
+}
+
+module "redis" {
+  source = "./redis"
+  vpc_id = module.vpc.main_vpc_id
+  public_subnet_ids = module.vpc.public_subnet_ids
 }
 
 # resource "aws_security_group" "allow_http" {

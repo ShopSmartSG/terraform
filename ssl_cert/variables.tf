@@ -8,6 +8,11 @@ variable "rds_endpoint" {
   type        = string
 }
 
+variable "redis_endpoint" {
+  description = "The Redis endpoint"
+  type        = string
+}
+
 variable "vpc_id" {
   description = "The VPC ID"
   type        = string
@@ -27,7 +32,7 @@ variable "public_endpoints" {
   description = "List of public ingress rules with hostnames"
   type        = list(string)
   default     = [
-    "central-hub.ss.aws.com"
+    "central-hub.shopsmartsg.com"
   ]
 }
 

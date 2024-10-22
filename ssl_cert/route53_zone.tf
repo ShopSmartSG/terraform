@@ -1,5 +1,5 @@
 resource "aws_route53_zone" "main" {
-  name = "ss.aws.com"
+  name = "shopsmartsg.com"
 }
 
 resource "aws_route53_zone" "ss_private" {

@@ -1,6 +1,14 @@
 resource "aws_route53_record" "rds_cname" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = "postgres01.ss.aws.com"
+  name    = "postgres01.shopsmartsg.com"
+  type    = "CNAME"
+  ttl     = 300
+  records = [var.rds_endpoint]
+}
+
+resource "aws_route53_record" "redis_cname" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = "redis.shopsmartsg.com"
   type    = "CNAME"
   ttl     = 300
   records = [var.rds_endpoint]

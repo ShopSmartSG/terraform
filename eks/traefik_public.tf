@@ -10,12 +10,12 @@ resource "kubernetes_ingress_v1" "public_ingress" {
 
   spec {
     # tls {
-    #   hosts      = ["central-hub.ss.aws.com"]
+    #   hosts      = ["central-hub.shopsmartsg.com"]
     #   secret_name = kubernetes_secret.central_hub_tls.metadata[0].name
     # }
 
     rule {
-      host = "central-hub.ss.aws.com"
+      host = "central-hub.shopsmartsg.com"
       http {
         path {
           path      = "/"

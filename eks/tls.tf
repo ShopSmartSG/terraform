@@ -7,7 +7,7 @@ resource "tls_self_signed_cert" "ss_cert" {
   private_key_pem = tls_private_key.ss_key.private_key_pem
 
   subject {
-    common_name  = "*.ss.aws.com"
+    common_name  = "*.shopsmartsg.com"
     organization = "ShopSmart"
   }
 
