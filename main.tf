@@ -18,7 +18,7 @@ module "vpc" {
 
 module "dns" {
   source = "./dns"
-  rds_endpoint = module.rds.postgres_endpoint
+  rds_address = module.rds.postgres_address
   vpc_id = module.vpc.main_vpc_id
   public_traefik_alb_dns_name = module.eks.traefik_public_dns_name
   private_traefik_alb_dns_name = module.eks.traefik_private_dns_name

@@ -1,5 +1,5 @@
-variable "rds_endpoint" {
-  description = "The RDS endpoint"
+variable "rds_address" {
+  description = "The RDS address"
   type        = string
 }
 

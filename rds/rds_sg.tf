@@ -18,3 +18,12 @@ resource "aws_security_group" "rds_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_db_subnet_group" "default" {
+  name       = "postgres-subnet-group"
+  subnet_ids = var.private_subnet_ids
+
+  tags = {
+    Name = "PostgresSubnetGroup"
+  }
+}

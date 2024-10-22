@@ -26,20 +26,3 @@ resource "aws_db_instance" "postgres" {
 #     EOT
 #   }
 # }
-
-resource "aws_db_subnet_group" "default" {
-  name       = "postgres-subnet-group"
-  subnet_ids = var.private_subnet_ids
-
-  tags = {
-    Name = "PostgresSubnetGroup"
-  }
-}
-
-# resource "aws_route53_record" "rds_cname" {
-#   zone_id = var.zone_id
-#   name    = "postgres.ss.aws.com"
-#   type    = "CNAME"
-#   ttl     = 300
-#   records = [aws_db_instance.postgres.endpoint]
-# }
