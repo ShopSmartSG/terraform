@@ -7,8 +7,8 @@ resource "aws_route53_record" "rds_cname" {
 }
 
 resource "aws_route53_record" "redis_cname" {
-  zone_id = aws_route53_zone.ss_public.zone_id
-  name    = "redis.shopsmartsg.com"
+  zone_id = aws_route53_zone.ss_private.zone_id
+  name    = "redis.ss.aws.local"
   type    = "CNAME"
   ttl     = 300
   records = [var.redis_endpoint]

@@ -61,7 +61,7 @@ module "rds" {
 module "redis" {
   source = "./redis"
   vpc_id = module.vpc.main_vpc_id
-  public_subnet_ids = module.vpc.public_subnet_ids
+  private_subnet_ids = module.vpc.private_subnet_ids
 }
 
 # resource "aws_security_group" "allow_http" {

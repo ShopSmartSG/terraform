@@ -20,5 +20,5 @@ resource "aws_security_group" "redis_sg" {
 
 resource "aws_elasticache_subnet_group" "default" {
   name       = "redis-subnet-group"
-  subnet_ids = var.public_subnet_ids
+  subnet_ids = var.private_subnet_ids
 }
