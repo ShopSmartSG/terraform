@@ -1,6 +1,6 @@
 resource "aws_route53_record" "rds_cname" {
-  zone_id = aws_route53_zone.ss_public.zone_id
-  name    = "postgres01.shopsmartsg.com"
+  zone_id = aws_route53_zone.ss_private.zone_id
+  name    = "postgres01.ss.aws.local"
   type    = "CNAME"
   ttl     = 300
   records = [var.rds_endpoint]

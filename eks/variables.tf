@@ -136,6 +136,24 @@ variable "nodegroup_config" {
       }
     },
     {
+      name          = "ss-elk"
+      ami_type      = "AL2_x86_64" ##CUSTOM
+      capacity_type = "ON_DEMAND"
+      instance_type = "t3a.medium"
+      desired_size  = 1
+      min_size      = 1
+      max_size      = 2
+      labels        = {
+        "ng_id" = "ss-elk",
+        "ss-elk" = "true"
+      }
+      tags = {
+        "environment" = "dev",
+        "set" = "ss-elk",
+        createdAt = "22/10/2025"
+      }
+    },
+    {
       name          = "ss-traefik"
       ami_type      = "AL2_x86_64" ##CUSTOM
       capacity_type = "ON_DEMAND"
