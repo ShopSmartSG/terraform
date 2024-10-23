@@ -23,6 +23,14 @@ YAML
   username: simran@shopsmartsg
   groups:
     - system:masters
+- userarn: arn:aws:iam::343218220772:user/simranarora@shopsmartsg.com
+  username: simranarora@shopsmartsg.com
+  groups:
+    - system:masters
+- userarn: arn:aws:iam::343218220772:user/yatharth@shopsmartsg
+  username: yatharth@shopsmartsg
+  groups:
+    - system:masters
 YAML
   }
 }

@@ -114,6 +114,10 @@ resource "aws_security_group" "public_alb_sg" {
   tags = {
     Name = "public-alb-sg"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 
@@ -150,5 +154,9 @@ resource "aws_security_group" "private_alb_sg" {
 
   tags = {
     Name = "private-alb-sg"
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
