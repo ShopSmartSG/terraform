@@ -35,3 +35,17 @@ resource "kubernetes_secret" "central_hub_tls" {
 
   type = "kubernetes.io/tls"
 }
+
+resource "kubernetes_secret" "central_hub_tls_default" {
+  metadata {
+    name      = "central-hub-tls"
+    namespace = "default"
+  }
+
+  data = {
+    "tls.crt" = base64encode(tls_self_signed_cert.ss_cert.cert_pem)
+    "tls.key" = base64encode(tls_private_key.ss_key.private_key_pem)
+  }
+
+  type = "kubernetes.io/tls"
+}
