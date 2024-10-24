@@ -31,6 +31,10 @@ YAML
   username: yatharth@shopsmartsg
   groups:
     - system:masters
+- userarn: arn:aws:iam::343218220772:user/aakash@shopsmartsg
+  username: aakash@shopsmartsg
+  groups:
+    - system:masters
 YAML
   }
 }
