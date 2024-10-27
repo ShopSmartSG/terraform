@@ -21,8 +21,8 @@ resource "aws_db_instance" "postgres" {
 # resource "null_resource" "create_additional_databases" {
 #   provisioner "local-exec" {
 #     command = <<EOT
-#       PGPASSWORD=abcd1234 psql -h ${aws_db_instance.postgres.address} -U admin -d postgres -c "CREATE DATABASE merchant;"
-#       PGPASSWORD=abcd1234 psql -h ${aws_db_instance.postgres.address} -U admin -d postgres -c "CREATE DATABASE customer;"
+#       PGPASSWORD=abcd1234 psql -h ${aws_db_instance.postgres.address} -U admin -d postgres -c "CREATE DATABASE profiledb;"
+#       PGPASSWORD=abcd1234 psql -h ${aws_db_instance.postgres.address} -U admin -d postgres -c "CREATE DATABASE productdb;"
 #     EOT
 #   }
 # }
