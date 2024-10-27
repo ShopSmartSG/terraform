@@ -109,7 +109,8 @@ variable "nodegroup_config" {
       max_size      = 2
       labels        = {
         "ng_id" = "ss1",
-        "shopsmart1" = "true"
+        "shopsmart1" = "true",
+        "services" = "true"
       }
       tags = {
         "environment" = "dev",
@@ -127,7 +128,8 @@ variable "nodegroup_config" {
       max_size      = 2
       labels        = {
         "ng_id" = "ss2",
-        "shopsmart2" = "true"
+        "shopsmart2" = "true",
+        "services" = "true"
       }
       tags = {
         "environment" = "dev",
