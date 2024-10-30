@@ -59,6 +59,11 @@ variable "iam_eks_registry_policy_attachment" {
   description = "AWS IAM EKS Registry policy attachment"
   type = string
 }
+variable "sqs_policy_attachment" {
+    description = "SQS Policy Attachment"
+    type = string
+}
+
 
 variable "eks_sg_id" {
   description = "EKS Security Group ID"

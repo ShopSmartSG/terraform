@@ -10,6 +10,7 @@ variable "aws_region" {
 
 module "iam_roles" {
   source = "./iam_roles"
+  sqs_queue_arns = [module.sqs.order_notifications_queue_arn, module.sqs.profile_notifications_queue_arn]
 }
 
 module "vpc" {
@@ -23,6 +24,10 @@ module "dns" {
   public_traefik_alb_dns_name = module.eks.traefik_public_dns_name
   private_traefik_alb_dns_name = module.eks.traefik_private_dns_name
   redis_endpoint = module.redis.redis_endpoint
+}
+
+module "sqs" {
+  source = "./sqs"
 }
 
 module "ssl_cert" {
@@ -41,15 +46,18 @@ module "eks" {
   eks_node_role_name = module.iam_roles.eks_node_role_name
   vpc_main_id = module.vpc.main_vpc_id
   vpc_main_cidr_block = module.vpc.main_vpc_cidr_block
-  iam_eks_cluster_policy_attachment = module.iam_roles.iam_eks_cluster_policy_attachment.policy_arn
-  iam_eks_node_policy_attachment = module.iam_roles.iam_eks_node_policy_attachment.policy_arn
-  iam_eks_cni_policy_attachment = module.iam_roles.iam_eks_cni_policy_attachment.policy_arn
-  iam_eks_registry_policy_attachment = module.iam_roles.iam_eks_registry_policy_attachment.policy_arn
   eks_sg_id = module.vpc.eks_cluster_sg_id
   eks_nodes_sg_id = module.vpc.eks_node_sg_id
   alb_public_sg_id = module.vpc.alb_public_sg_id
   alb_private_sg_id = module.vpc.alb_private_sg_id
   acm_public_cert_arn = module.ssl_cert.certificate_arn
+
+  # policy attachments for cluster and nodes
+  iam_eks_cluster_policy_attachment = module.iam_roles.iam_eks_cluster_policy_attachment.policy_arn
+  iam_eks_node_policy_attachment = module.iam_roles.iam_eks_node_policy_attachment.policy_arn
+  iam_eks_cni_policy_attachment = module.iam_roles.iam_eks_cni_policy_attachment.policy_arn
+  iam_eks_registry_policy_attachment = module.iam_roles.iam_eks_registry_policy_attachment.policy_arn
+  sqs_policy_attachment = module.iam_roles.iam_sqs_policy_attachment.policy_arn
 }
 
 module "rds" {

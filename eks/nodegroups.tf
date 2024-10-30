@@ -39,7 +39,8 @@ resource "aws_eks_node_group" "node_group" {
 
     var.iam_eks_node_policy_attachment,
     var.iam_eks_cni_policy_attachment,
-    var.iam_eks_registry_policy_attachment
+    var.iam_eks_registry_policy_attachment,
+    var.sqs_policy_attachment
 
   ]
 }

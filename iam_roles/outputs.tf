@@ -37,3 +37,8 @@ output "iam_eks_registry_policy_attachment" {
   description = "Registry Policy role attachment"
   value = aws_iam_role_policy_attachment.eks_registry_policy
 }
+
+output "iam_sqs_policy_attachment" {
+  description = "SQS Policy Attachment"
+  value = aws_iam_role_policy_attachment.sqs_policy_attachment
+}
