@@ -15,24 +15,8 @@ resource "kubernetes_config_map" "aws_auth" {
 YAML
 
     mapUsers = <<YAML
-- userarn: arn:aws:iam::343218220772:user/sasmit@shopsmartsg
+- userarn: arn:aws:iam::528757829228:user/cli-role
   username: sasmit@shopsmartsg
-  groups:
-    - system:masters
-- userarn: arn:aws:iam::343218220772:user/simran@shopsmartsg
-  username: simran@shopsmartsg
-  groups:
-    - system:masters
-- userarn: arn:aws:iam::343218220772:user/simranarora@shopsmartsg.com
-  username: simranarora@shopsmartsg.com
-  groups:
-    - system:masters
-- userarn: arn:aws:iam::343218220772:user/yatharth@shopsmartsg
-  username: yatharth@shopsmartsg
-  groups:
-    - system:masters
-- userarn: arn:aws:iam::343218220772:user/aakash@shopsmartsg
-  username: aakash@shopsmartsg
   groups:
     - system:masters
 YAML

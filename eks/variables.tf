@@ -85,10 +85,10 @@ variable "alb_private_sg_id" {
   type = string
 }
 
-variable "acm_public_cert_arn" {
-  description = "ARN of the public ACM certificate"
-  type        = string
-}
+# variable "acm_public_cert_arn" {
+#   description = "ARN of the public ACM certificate"
+#   type        = string
+# }
 
 variable "nodegroup_config" {
   description = "Node group configurations"

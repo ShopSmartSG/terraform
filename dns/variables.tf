@@ -13,23 +13,23 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "public_traefik_alb_dns_name" {
-  description = "The public traefik ALB DNS name"
-  type        = string
-}
+# variable "public_traefik_alb_dns_name" {
+#   description = "The public traefik ALB DNS name"
+#   type        = string
+# }
 
 variable "private_traefik_alb_dns_name" {
   description = "The private traefik ALB DNS name"
   type        = string
 }
 
-variable "public_endpoints" {
-  description = "List of public ingress rules with hostnames"
-  type        = list(string)
-  default     = [
-    "central-hub.shopsmartsg.com"
-  ]
-}
+# variable "public_endpoints" {
+#   description = "List of public ingress rules with hostnames"
+#   type        = list(string)
+#   default     = [
+#     "central-hub.shopsmartsg.com"
+#   ]
+# }
 
 variable "private_endpoints" {
   description = "List of private ingress rules with hostnames"

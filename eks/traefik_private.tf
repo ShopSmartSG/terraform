@@ -71,6 +71,7 @@ resource "kubernetes_ingress_v1" "private_ingress" {
     namespace = kubernetes_namespace.shop_smart.metadata.0.name
     annotations = {
       "kubernetes.io/ingress.class" = "traefik-private"
+      # "alb.ingress.kubernetes.io/target-group-arn" = aws_lb_target_group.traefik_tg_private.arn
     }
   }
 

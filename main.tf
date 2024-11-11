@@ -21,7 +21,7 @@ module "dns" {
   source = "./dns"
   rds_address = module.rds.postgres_address
   vpc_id = module.vpc.main_vpc_id
-  public_traefik_alb_dns_name = module.eks.traefik_public_dns_name
+  # public_traefik_alb_dns_name = module.eks.traefik_public_dns_name
   private_traefik_alb_dns_name = module.eks.traefik_private_dns_name
   redis_endpoint = module.redis.redis_endpoint
 }
@@ -30,10 +30,10 @@ module "sqs" {
   source = "./sqs"
 }
 
-module "ssl_cert" {
-  source = "./ssl_cert"
-  zone_id = module.dns.public_zone_id
-}
+# module "ssl_cert" {
+#   source = "./ssl_cert"
+#   zone_id = module.dns.public_zone_id
+# }
 
 module "eks" {
   source = "./eks"
@@ -50,7 +50,7 @@ module "eks" {
   eks_nodes_sg_id = module.vpc.eks_node_sg_id
   alb_public_sg_id = module.vpc.alb_public_sg_id
   alb_private_sg_id = module.vpc.alb_private_sg_id
-  acm_public_cert_arn = module.ssl_cert.certificate_arn
+  # acm_public_cert_arn = module.ssl_cert.certificate_arn
 
   # policy attachments for cluster and nodes
   iam_eks_cluster_policy_attachment = module.iam_roles.iam_eks_cluster_policy_attachment.policy_arn
