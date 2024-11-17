@@ -8,6 +8,11 @@ variable "redis_endpoint" {
   type        = string
 }
 
+variable "documentdb_endpoint" {
+  description = "The DocumentDB endpoint"
+  type        = string
+}
+
 variable "vpc_id" {
   description = "The VPC ID"
   type        = string

@@ -24,6 +24,7 @@ module "dns" {
   # public_traefik_alb_dns_name = module.eks.traefik_public_dns_name
   private_traefik_alb_dns_name = module.eks.traefik_private_dns_name
   redis_endpoint = module.redis.redis_endpoint
+  documentdb_endpoint = module.document_db.documentdb_endpoint
 }
 
 module "sqs" {
@@ -70,6 +71,12 @@ module "redis" {
   source = "./redis"
   vpc_id = module.vpc.main_vpc_id
   private_subnet_ids = module.vpc.private_subnet_ids
+}
+
+module "document_db"{
+  source = "./document_db"
+  private_subnet_ids = module.vpc.private_subnet_ids
+  vpc_id = module.vpc.main_vpc_id
 }
 
 # resource "aws_security_group" "allow_http" {
