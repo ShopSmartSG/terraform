@@ -9,6 +9,11 @@ terraform {
       version = "~> 5.72.1"
     }
 
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 6.17.0"
+    }
+
     random = {
       source  = "hashicorp/random"
       version = "~> 3.6.3"

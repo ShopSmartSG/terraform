@@ -37,14 +37,14 @@
 #          aws-region: ${{ secrets.AWS_REGION }}
 #
 #      - name: Terraform Init
-#        run: terraform init -upgrade
+#        run: terraform -chdir=aws init -upgrade
 #
 #      - name: Terraform Plan
 #        run: |
 #          if [ "${{ github.event.inputs.action }}" == "plan" ] || [ "${{ github.event.inputs.action }}" == "apply" ]; then
-#            terraform plan -var="aws_region=${{ secrets.AWS_REGION }}" -out=plan.out
+#            terraform -chdir=aws plan -var="aws_region=${{ secrets.AWS_REGION }}" -out=plan.out
 #          else
-#            terraform plan -var="aws_region=${{ secrets.AWS_REGION }}" -destroy -out=plan.out
+#            terraform -chdir=aws plan -var="aws_region=${{ secrets.AWS_REGION }}" -destroy -out=plan.out
 #          fi
 #
 #      - name: Upload Plan
@@ -75,13 +75,13 @@
 #          aws-region: ${{ secrets.AWS_REGION }}
 #
 #      - name: Terraform Init
-#        run: terraform init -upgrade
+#        run: terraform -chdir=aws init -upgrade
 #
 #      - name: Terraform Plan (Re-plan)
-#        run: terraform plan -var="aws_region=${{ secrets.AWS_REGION }}" -out=plan.out
+#        run: terraform -chdir=aws plan -var="aws_region=${{ secrets.AWS_REGION }}" -out=plan.out
 #
 #      - name: Terraform Apply
-#        run: terraform apply -auto-approve plan.out
+#        run: terraform -chdir=aws apply -auto-approve plan.out
 #
 #  terraform-destroy:
 #    name: Destroy Infrastructure
@@ -105,10 +105,10 @@
 #          aws-region: ${{ secrets.AWS_REGION }}
 #
 #      - name: Terraform Init
-#        run: terraform init -upgrade
+#        run: terraform -chdir=aws init -upgrade
 #
 #      - name: Terraform Plan (Re-plan)
-#        run: terraform plan -var="aws_region=${{ secrets.AWS_REGION }}" -destroy -out=destroy.out
+#        run: terraform -chdir=aws plan -var="aws_region=${{ secrets.AWS_REGION }}" -destroy -out=destroy.out
 #
 #      - name: Terraform Apply Destroy
-#        run: terraform apply -auto-approve destroy.out
+#        run: terraform -chdir=aws apply -auto-approve destroy.out

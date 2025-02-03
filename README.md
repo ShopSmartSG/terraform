@@ -27,6 +27,19 @@ Then use the following :
 First always run
 `init` with either `-migrate-state` or `-reconfigure` flag
 
+## Destroy
+Either give `-destroy` argument and then `terraform apply plan` or use `terraform destroy` directly. 
+
+Remember to use "-chdir" flag to switch between directories.
+
+
+### Example 
+1. terraform -chdir=gcp init  or terraform -chdir=gcp init -migrate-state
+2. terraform -chdir=gcp plan -out="plan.out"
+3. terraform -chdir=gcp apply "plan.out"
+4. Destroy : terraform -chdir=gcp plan out="plan.out" -destroy
+5. Apply destroy : terraform -chdir=gcp apply "plan.out"
+
 
 ## Concept of workspaces
 ### What Does terraform workspace Do?
