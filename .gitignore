@@ -1,0 +1,19 @@
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### GCP Keys ###
+.gcp_keys
+
+terraform.tfstate.d
+.terraform
+
+### AWS Files to skip ###
+aws/.terraform
+aws/.terraform.lock.hcl
+
+### GCP files to skip ###
+gcp/.terraform
+gcp/.terraform.lock.hcl
