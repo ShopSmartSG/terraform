@@ -58,3 +58,12 @@ resource "google_compute_firewall" "allow-external" {
 
   source_ranges = ["0.0.0.0/0"]
 }
+
+resource "google_compute_subnetwork" "ilb_proxy_subnet" {
+  name          = "ilb-proxy-subnet"
+  ip_cidr_range = "10.129.0.0/23" # Adjust range as needed
+  region        = var.gcp_region
+  network       = google_compute_network.vpc.id
+  purpose       = "REGIONAL_MANAGED_PROXY"
+  role          = "ACTIVE"
+}

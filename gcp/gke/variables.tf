@@ -8,6 +8,11 @@ variable "gcp_region" {
   type        = string
 }
 
+variable "gcp_zone" {
+  description = "GCP Zone"
+  type        = string
+}
+
 variable "vpc_name" {
   description = "VPC Name"
   type        = string
@@ -32,15 +37,25 @@ variable "node_pools" {
   }))
   default = [
     {
-      name          = "general-pool"
+      name          = "shopsmart1"
       machine_type  = "e2-standard-4"
       min_count     = 1
       max_count     = 2
       desired_count = 1
       disk_size_gb  = 50
       tags          = ["general"]
-      labels        = { "purpose" = "general", "ng_id" = "ss1" }
+      labels        = { "purpose" = "general", "ng_id" = "ss1", "service" = "true" }
     },
+    # {
+    #   name          = "ss-elk"
+    #   machine_type  = "e2-standard-4"
+    #   min_count     = 1
+    #   max_count     = 2
+    #   desired_count = 1
+    #   disk_size_gb  = 50
+    #   tags          = ["general"]
+    #   labels        = { "purpose" = "elk", "set" = "ss-elk" }
+    # },
     {
       name          = "compute-pool"
       machine_type  = "e2-highcpu-8"
@@ -62,4 +77,62 @@ variable "gke_sa_email" {
 variable "gke_node_sa_name" {
     description = "GKE Node Service Account Name"
     type        = string
+}
+
+variable "ilb_proxy_subnet_id" {
+  description = "ILB Proxy Subnet ID"
+  type        = string
+}
+
+
+variable "public_endpoints" {
+  description = "List of public services exposed via GCLB"
+  type        = list(object({
+    name       = string
+    port       = number
+  }))
+  default = [
+    {
+      name       = "central-hub"
+      port       = 82
+    }
+  ]
+}
+
+variable "private_endpoints" {
+  description = "List of private services using ILB"
+  type        = list(object({
+    name       = string
+    port       = number
+  }))
+  default = [
+    {
+      name       = "central-hub"
+      port       = 82
+    },
+    # {
+    #   name       = "profile-service"
+    #   port       = 80 //should match the one configured in the service.yml file in the actual service helm chart
+    # },
+    # {
+    #   name       = "product-service"
+    #   port       = 95
+    # },
+    {
+      name       = "order-service"
+      port       = 85
+    }
+    # {
+    #   name       = "delivery-service"
+    #   port       = 92
+    # },
+    # {
+    #   name       = "login-service"
+    #   port       = 98
+    # },
+    # {
+    #   name       = "utility-service"
+    #   port       = 90
+    # }
+  ]
 }

@@ -21,3 +21,7 @@ output "private_subnet" {
 output "private_subnet_name" {
   value = google_compute_subnetwork.private_subnet.name
 }
+
+output "ilb_proxy_subnet" {
+  value = google_compute_subnetwork.ilb_proxy_subnet.id
+}
