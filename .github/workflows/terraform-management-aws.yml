@@ -1,114 +1,114 @@
-name: Terraform Management
-
-on:
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
-    inputs:
-      action:
-        description: 'Choose action to perform'
-        required: true
-        default: 'plan'
-        options:
-          - plan
-          - plan-destroy
-          - apply
-          - destroy
-
-jobs:
-  terraform-plan:
-    name: Plan Infrastructure Changes
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Terraform Init
-        run: terraform -chdir=aws init -upgrade
-
-      - name: Terraform Plan
-        run: |
-          if [ "${{ github.event.inputs.action }}" == "plan" ] || [ "${{ github.event.inputs.action }}" == "apply" ]; then
-            terraform -chdir=aws plan -var="aws_region=${{ secrets.AWS_REGION }}" -out=plan.out
-          else
-            terraform -chdir=aws plan -var="aws_region=${{ secrets.AWS_REGION }}" -destroy -out=plan.out
-          fi
-
-      - name: Upload Plan
-        uses: actions/upload-artifact@v3
-        with:
-          name: terraform-plan
-          path: plan.out
-
-  terraform-apply:
-    name: Apply Infrastructure Changes
-    runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'apply'
-    needs: terraform-plan
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Terraform Init
-        run: terraform -chdir=aws init -upgrade
-
-      - name: Terraform Plan (Re-plan)
-        run: terraform -chdir=aws plan -var="aws_region=${{ secrets.AWS_REGION }}" -out=plan.out
-
-      - name: Terraform Apply
-        run: terraform -chdir=aws apply -auto-approve plan.out
-
-  terraform-destroy:
-    name: Destroy Infrastructure
-    runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy'
-    needs: terraform-plan
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Terraform Init
-        run: terraform -chdir=aws init -upgrade
-
-      - name: Terraform Plan (Re-plan)
-        run: terraform -chdir=aws plan -var="aws_region=${{ secrets.AWS_REGION }}" -destroy -out=destroy.out
-
-      - name: Terraform Apply Destroy
-        run: terraform -chdir=aws apply -auto-approve destroy.out
+#name: Terraform Management
+#
+#on:
+#  pull_request:
+#    branches:
+#      - main
+#  workflow_dispatch:
+#    inputs:
+#      action:
+#        description: 'Choose action to perform'
+#        required: true
+#        default: 'plan'
+#        options:
+#          - plan
+#          - plan-destroy
+#          - apply
+#          - destroy
+#
+#jobs:
+#  terraform-plan:
+#    name: Plan Infrastructure Changes
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#
+#      - name: Set up Terraform
+#        uses: hashicorp/setup-terraform@v2
+#        with:
+#          terraform_version: 1.5.0
+#
+#      - name: Configure AWS Credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ${{ secrets.AWS_REGION }}
+#
+#      - name: Terraform Init
+#        run: terraform -chdir=aws init -upgrade
+#
+#      - name: Terraform Plan
+#        run: |
+#          if [ "${{ github.event.inputs.action }}" == "plan" ] || [ "${{ github.event.inputs.action }}" == "apply" ]; then
+#            terraform -chdir=aws plan -var="aws_region=${{ secrets.AWS_REGION }}" -out=plan.out
+#          else
+#            terraform -chdir=aws plan -var="aws_region=${{ secrets.AWS_REGION }}" -destroy -out=plan.out
+#          fi
+#
+#      - name: Upload Plan
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: terraform-plan
+#          path: plan.out
+#
+#  terraform-apply:
+#    name: Apply Infrastructure Changes
+#    runs-on: ubuntu-latest
+#    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'apply'
+#    needs: terraform-plan
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#
+#      - name: Set up Terraform
+#        uses: hashicorp/setup-terraform@v2
+#        with:
+#          terraform_version: 1.5.0
+#
+#      - name: Configure AWS Credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ${{ secrets.AWS_REGION }}
+#
+#      - name: Terraform Init
+#        run: terraform -chdir=aws init -upgrade
+#
+#      - name: Terraform Plan (Re-plan)
+#        run: terraform -chdir=aws plan -var="aws_region=${{ secrets.AWS_REGION }}" -out=plan.out
+#
+#      - name: Terraform Apply
+#        run: terraform -chdir=aws apply -auto-approve plan.out
+#
+#  terraform-destroy:
+#    name: Destroy Infrastructure
+#    runs-on: ubuntu-latest
+#    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy'
+#    needs: terraform-plan
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#
+#      - name: Set up Terraform
+#        uses: hashicorp/setup-terraform@v2
+#        with:
+#          terraform_version: 1.5.0
+#
+#      - name: Configure AWS Credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ${{ secrets.AWS_REGION }}
+#
+#      - name: Terraform Init
+#        run: terraform -chdir=aws init -upgrade
+#
+#      - name: Terraform Plan (Re-plan)
+#        run: terraform -chdir=aws plan -var="aws_region=${{ secrets.AWS_REGION }}" -destroy -out=destroy.out
+#
+#      - name: Terraform Apply Destroy
+#        run: terraform -chdir=aws apply -auto-approve destroy.out
