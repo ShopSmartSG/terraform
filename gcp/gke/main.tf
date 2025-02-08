@@ -12,6 +12,11 @@ resource "google_container_cluster" "gke_cluster" {
   workload_identity_config {
     workload_pool = "${var.gcp_project}.svc.id.goog"
   }
+  addons_config {
+    http_load_balancing {
+      disabled = false  # Enables the HTTP Load Balancing (Ingress) controller
+    }
+  }
 }
 
 resource "google_container_node_pool" "node_pools" {
@@ -22,10 +27,12 @@ resource "google_container_node_pool" "node_pools" {
   cluster    = google_container_cluster.gke_cluster.name
   node_count = each.value.desired_count
 
-  autoscaling {
-    min_node_count = each.value.min_count
-    max_node_count = each.value.max_count
-  }
+  # autoscaling {
+  #   min_node_count = each.value.min_count
+  #   max_node_count = each.value.max_count
+  # }
+
+  node_locations = [var.gcp_zone]
 
   node_config {
     machine_type = each.value.machine_type
@@ -64,14 +71,14 @@ provider "kubernetes" {
   ]
 }
 
-resource "kubernetes_namespace" "shop_smart" {
-  metadata {
-    name = "shop-smart"
-  }
-}
-
-resource "kubernetes_namespace" "traefik" {
-  metadata {
-    name = "traefik"
-  }
-}
+# resource "kubernetes_namespace" "shop_smart" {
+#   metadata {
+#     name = "shop-smart"
+#   }
+# }
+#
+# resource "kubernetes_namespace" "traefik" {
+#   metadata {
+#     name = "traefik"
+#   }
+# }
