@@ -29,7 +29,7 @@ resource "kubernetes_ingress_v1" "public_ingress" {
         host = "${rule.value.name}.shopsmartsg.com"
         http {
           path {
-            path      = "/"
+            path      = "/*"
             path_type = "ImplementationSpecific"
             backend {
               service {
@@ -81,7 +81,7 @@ resource "kubernetes_ingress_v1" "private_ingress" {
         host = "${rule.value.name}.ss.gcp.local"
         http {
           path {
-            path      = "/"
+            path      = "/*"
             path_type = "ImplementationSpecific"
             backend {
               service {
