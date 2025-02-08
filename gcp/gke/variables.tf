@@ -56,16 +56,16 @@ variable "node_pools" {
       tags          = ["general"]
       labels        = { "purpose" = "general", "ng_id" = "ss1", "service" = "true" }
     },
-    # {
-    #   name          = "ss-elk"
-    #   machine_type  = "e2-standard-4"
-    #   min_count     = 1
-    #   max_count     = 2
-    #   desired_count = 1
-    #   disk_size_gb  = 50
-    #   tags          = ["general"]
-    #   labels        = { "purpose" = "elk", "set" = "ss-elk" }
-    # },
+    {
+      name          = "ss-elk"
+      machine_type  = "e2-standard-4"
+      min_count     = 1
+      max_count     = 2
+      desired_count = 1
+      disk_size_gb  = 50
+      tags          = ["general"]
+      labels        = { "purpose" = "elk", "set" = "ss-elk" }
+    },
     {
       name          = "compute-pool"
       machine_type  = "e2-highcpu-8"
@@ -100,6 +100,10 @@ variable "public_endpoints" {
     {
       name       = "central-hub"
       port       = 82
+    },
+    {
+      name       = "kibana"
+      port       = 5601
     }
   ]
 }

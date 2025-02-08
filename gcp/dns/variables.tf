@@ -18,7 +18,8 @@ variable "public_endpoints" {
   description = "List of public ingress rules with service names"
   type        = list(string)
   default     = [
-    "central-hub"
+    "central-hub",
+    "kibana"
   ]
 }
 
