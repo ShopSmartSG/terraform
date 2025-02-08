@@ -10,9 +10,16 @@ resource "google_compute_instance" "test_instance" {
   }
 
   network_interface {
-    network = "default"
+    network = module.vpc.vpc_self_link
+    subnetwork = module.vpc.private_subnet
     access_config {}
   }
+
+  # network_interface {
+  #   network = module.vpc.vpc_self_link
+  #   subnetwork = module.vpc.ilb_proxy_subnet
+  #   access_config {}
+  # }
 
   tags = ["allow-ssh"] # Match this tag in the firewall rule
 }

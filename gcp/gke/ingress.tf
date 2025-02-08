@@ -4,8 +4,8 @@
 #   cluster_ca_certificate = base64decode(google_container_cluster.primary.master_auth[0].cluster_ca_certificate)
 # }
 
-resource "google_compute_global_address" "public_ip" {
-  name         = "shopsmartsg-public-ip"
+resource "google_compute_global_address" "public_lb_ip" {
+  name         = "shopsmartsg-public-lb-ip"
   description  = "Static IP address for public ingress"
   purpose      = "VIP"
   address_type = "EXTERNAL"
@@ -18,7 +18,7 @@ resource "kubernetes_ingress_v1" "public_ingress" {
     namespace = "default"
     annotations = {
       "kubernetes.io/ingress.class" = "gce"
-      "kubernetes.io/ingress.global-static-ip-name" = google_compute_global_address.public_ip.name
+      "kubernetes.io/ingress.global-static-ip-name" = google_compute_global_address.public_lb_ip.name
     }
   }
 
@@ -54,6 +54,14 @@ resource "kubernetes_ingress_v1" "public_ingress" {
   }
 }
 
+resource "google_compute_address" "private_lb_ip" {
+  name          = "private-lb-ip"
+  subnetwork    = var.private_subnet_id
+  address_type  = "INTERNAL"
+  purpose       = "SHARED_LOADBALANCER_VIP"
+
+}
+
 
 # Private Ingress Setup
 resource "kubernetes_ingress_v1" "private_ingress" {
@@ -62,6 +70,7 @@ resource "kubernetes_ingress_v1" "private_ingress" {
     namespace = "default"
     annotations = {
       "kubernetes.io/ingress.class" = "gce-internal"
+      "networking.gke.io/internal-load-balancer-vip" = google_compute_address.private_lb_ip.address
     }
   }
 
@@ -86,9 +95,30 @@ resource "kubernetes_ingress_v1" "private_ingress" {
         }
       }
     }
+
+    default_backend {
+      service {
+        name = "central-hub"
+        port {
+          number = 82
+        }
+      }
+    }
   }
 
-  depends_on = [var.ilb_proxy_subnet_id]
+  # depends_on = [var.ilb_proxy_subnet_id]
+}
+
+data "kubernetes_ingress_v1" "private_ingress" {
+  metadata {
+    name = "private-ingress"
+  }
+}
+
+data "kubernetes_ingress_v1" "public_ingress" {
+  metadata {
+    name = "public-ingress"
+  }
 }
 
 

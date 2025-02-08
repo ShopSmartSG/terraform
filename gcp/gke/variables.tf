@@ -23,6 +23,16 @@ variable "private_subnet_name" {
   type        = string
 }
 
+variable "private_subnet_id" {
+  description = "Private Subnet ID"
+  type        = string
+}
+
+variable "ilb_proxy_subnet_id" {
+  description = "ILB Proxy Subnet ID"
+  type        = string
+}
+
 variable "node_pools" {
   description = "List of node pools configurations"
   type = list(object({
@@ -77,11 +87,6 @@ variable "gke_sa_email" {
 variable "gke_node_sa_name" {
     description = "GKE Node Service Account Name"
     type        = string
-}
-
-variable "ilb_proxy_subnet_id" {
-  description = "ILB Proxy Subnet ID"
-  type        = string
 }
 
 

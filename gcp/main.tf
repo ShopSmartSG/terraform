@@ -47,7 +47,17 @@ module "gke" {
     gcp_zone = var.gcp_zone
     vpc_name = module.vpc.vpc_name
     ilb_proxy_subnet_id = module.vpc.ilb_proxy_subnet
+    private_subnet_id = module.vpc.private_subnet
     private_subnet_name = module.vpc.private_subnet_name
     gke_sa_email = module.iam.gke_service_account_email
     gke_node_sa_name = module.iam.gke_node_sa_name
+}
+
+module "dns" {
+  source = "./dns"
+  vpc_self_link = module.vpc.vpc_self_link
+  public_ingress_static_ip = module.gke.public_ingress_static_global_ip
+  private_ingress_ip = module.gke.private_ingress_static_ip
+  # ilb_proxy_subnet_id = module.vpc.ilb_proxy_subnet
+  private_subnet_id = module.vpc.private_subnet
 }

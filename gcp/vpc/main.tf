@@ -20,6 +20,16 @@ resource "google_compute_subnetwork" "private_subnet" {
   private_ip_google_access = true
 }
 
+resource "google_compute_subnetwork" "ilb_proxy_subnet" {
+  name          = "ilb-proxy-subnet"
+  ip_cidr_range = "10.129.0.0/23" # Adjust range as needed
+  region        = var.gcp_region
+  network       = google_compute_network.vpc.id
+  purpose       = "REGIONAL_MANAGED_PROXY"
+  # purpose       = "PRIVATE"
+  role          = "ACTIVE"
+}
+
 # NAT Gateway for private resources to access the internet
 resource "google_compute_router" "router" {
   name    = "shopsmart-router"
@@ -59,11 +69,18 @@ resource "google_compute_firewall" "allow-external" {
   source_ranges = ["0.0.0.0/0"]
 }
 
-resource "google_compute_subnetwork" "ilb_proxy_subnet" {
-  name          = "ilb-proxy-subnet"
-  ip_cidr_range = "10.129.0.0/23" # Adjust range as needed
-  region        = var.gcp_region
-  network       = google_compute_network.vpc.id
-  purpose       = "REGIONAL_MANAGED_PROXY"
-  role          = "ACTIVE"
+// Allow SSH access from Google's IAP
+resource "google_compute_firewall" "allow_iap_ssh" {
+  name    = "allow-iap-ssh"
+  network = google_compute_network.vpc.self_link  # Change if using a different VPC
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  source_ranges = ["35.235.240.0/20"]  # Google's IAP IP range
+  target_tags   = ["allow-ssh"]  # Must match instance's network tags
+  direction     = "INGRESS"
+  priority      = 1000
 }
