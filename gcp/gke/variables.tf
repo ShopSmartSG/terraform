@@ -89,6 +89,11 @@ variable "gke_node_sa_name" {
     type        = string
 }
 
+variable "managed_ssl_certificate_name" {
+    description = "Managed SSL Certificate Name"
+    type        = string
+}
+
 
 variable "public_endpoints" {
   description = "List of public services exposed via GCLB"

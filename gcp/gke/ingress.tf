@@ -1,9 +1,3 @@
-# provider "kubernetes" {
-#   host                   = google_container_cluster.primary.endpoint
-#   token                  = data.google_client_config.default.access_token
-#   cluster_ca_certificate = base64decode(google_container_cluster.primary.master_auth[0].cluster_ca_certificate)
-# }
-
 resource "google_compute_global_address" "public_lb_ip" {
   name         = "shopsmartsg-public-lb-ip"
   description  = "Static IP address for public ingress"
@@ -19,10 +13,16 @@ resource "kubernetes_ingress_v1" "public_ingress" {
     annotations = {
       "kubernetes.io/ingress.class" = "gce"
       "kubernetes.io/ingress.global-static-ip-name" = google_compute_global_address.public_lb_ip.name
+      "networking.gke.io/managed-certificates" = var.managed_ssl_certificate_name
     }
   }
 
   spec {
+    # tls {
+    #   hosts = ["*.shopsmartsg.com", "shopsmartsg.com"]
+    #   secret_name = "tls-cert-secret"
+    # }
+
     dynamic "rule" {
       for_each = var.public_endpoints
       content {
@@ -120,58 +120,3 @@ data "kubernetes_ingress_v1" "public_ingress" {
     name = "public-ingress"
   }
 }
-
-
-
-
-# Public Load Balancer Setup
-# resource "kubernetes_service" "public_lb" {
-#   for_each = { for svc in var.public_endpoints : svc.name => svc }
-#
-#   metadata {
-#     name      = "${each.value.name}-svc"
-#     namespace = "default"
-#     annotations = {
-#       "cloud.google.com/load-balancer-type" = "External"
-#     }
-#   }
-#
-#   spec {
-#     selector = {
-#       "nodegroup" = "public-nodegroup"
-#     }
-#
-#     port {
-#       port        = each.value.port
-#       target_port = each.value.targetPort
-#     }
-#
-#     type = "LoadBalancer"
-#   }
-# }
-
-# Private Internal Load Balancer Setup
-# resource "kubernetes_service" "private_lb" {
-#   for_each = { for svc in var.private_endpoints : svc.name => svc }
-#
-#   metadata {
-#     name      = "${each.value.name}-svc"
-#     namespace = "default"
-#     annotations = {
-#       "cloud.google.com/load-balancer-type" = "Internal"
-#     }
-#   }
-#
-#   spec {
-#     selector = {
-#       "nodegroup" = "private-nodegroup"
-#     }
-#
-#     port {
-#       port        = each.value.port
-#       target_port = each.value.targetPort
-#     }
-#
-#     type = "LoadBalancer"
-#   }
-# }

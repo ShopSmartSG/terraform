@@ -17,5 +17,4 @@ output "public_ingress_static_global_ip" {
 
 output "private_ingress_static_ip" {
   value = data.kubernetes_ingress_v1.private_ingress.status.0.load_balancer.0.ingress.0.ip
-  # value = google_compute_address.private_lb_ip.address
 }
