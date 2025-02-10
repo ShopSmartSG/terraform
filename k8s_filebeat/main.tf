@@ -52,22 +52,3 @@ resource "kubernetes_secret" "filebeat_credentials" {
     "psychic-heading-449012-r6-71b55b565dfb.json" = file(var.gcp_credentials_file)
   }
 }
-
-module "helm_charts" {
-  source = "git::https://github.com/ShopSmartSG/helm-charts.git//ELK/gcp-monitoring"
-}
-
-# Apply Filebeat Configuration
-resource "kubectl_manifest" "filebeat_config" {
-  yaml_body = file("${path.module}/helm_charts/filebeat-gcp-config.yaml")
-}
-
-# Apply Filebeat Deployment
-resource "kubectl_manifest" "filebeat_deployment" {
-  yaml_body = file("${path.module}/helm_charts/filebeat-gcp-deployment.yaml")
-  depends_on = [
-    kubernetes_secret.filebeat_credentials,
-    kubernetes_service_account.filebeat_ksa,
-    kubernetes_cluster_role_binding.filebeat_binding
-  ]
-}

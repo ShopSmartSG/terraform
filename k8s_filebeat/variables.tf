@@ -15,7 +15,3 @@ variable "gcp_credentials_file" {
   type        = string
   default     = "/etc/gcp/psychic-heading-449012-r6-71b55b565dfb.json"
 }
-
-module "helm_charts" {
-  source = "git::https://github.com/ShopSmartSG/helm-charts.git//ELK/gcp-monitoring"
-}
