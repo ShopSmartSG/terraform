@@ -54,7 +54,7 @@ resource "kubernetes_secret" "filebeat_credentials" {
 }
 
 module "helm_charts" {
-  source = "git::https://github.com/your-org/helm-charts.git//ELK/gcp-monitoring"
+  source = "git::https://github.com/ShopSmartSG/helm-charts.git//ELK/gcp-monitoring"
 }
 
 # Apply Filebeat Configuration
