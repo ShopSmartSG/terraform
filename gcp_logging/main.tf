@@ -1,5 +1,5 @@
-provider "kubectl" {
-  config_path = "~/.kube/config"
+provider "google" {
+  project = var.project_id
 }
 
 # GCP Service Account
