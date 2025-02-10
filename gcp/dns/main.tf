@@ -4,18 +4,18 @@ resource "google_dns_managed_zone" "ss_public" {
   description = "DNS Zone for shopsmartsg.com"
 
   dnssec_config {
-    state = "off"
-    # non_existence = "nsec3" # Enables NSEC3 for better security
-    # default_key_specs {
-    #   key_type    = "keySigning"
-    #   algorithm   = "rsasha256"
-    #   key_length  = 2048
-    # }
-    # default_key_specs {
-    #   key_type    = "zoneSigning"
-    #   algorithm   = "rsasha256"
-    #   key_length  = 1024
-    # }
+    state = "on"
+    non_existence = "nsec3" # Enables NSEC3 for better security
+    default_key_specs {
+      key_type    = "keySigning"
+      algorithm   = "rsasha256"
+      key_length  = 2048
+    }
+    default_key_specs {
+      key_type    = "zoneSigning"
+      algorithm   = "rsasha256"
+      key_length  = 1024
+    }
   }
 }
 
