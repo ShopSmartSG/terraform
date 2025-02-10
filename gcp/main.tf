@@ -51,7 +51,7 @@ module "gke" {
     private_subnet_name = module.vpc.private_subnet_name
     gke_sa_email = module.iam.gke_service_account_email
     gke_node_sa_name = module.iam.gke_node_sa_name
-    managed_ssl_certificate_name = module.dns.managed_ssl_cert_name
+    # managed_ssl_certificate_name = module.dns.managed_ssl_cert_name
 }
 
 module "dns" {
