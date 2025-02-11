@@ -64,3 +64,25 @@ resource "google_logging_project_sink" "sinks" {
   destination = "pubsub.googleapis.com/${google_pubsub_topic.logging_topics[each.key].id}"
   filter      = each.value.filter
 }
+
+# Need to add this to grant publisher permissions to Log Router Service Account
+resource "google_pubsub_topic_iam_member" "log_router_publisher" {
+  for_each = toset(var.pubsub_topics)
+  project  = var.gcp_project
+  topic    = google_pubsub_topic.logging_topics[each.key].name
+  role     = "roles/pubsub.publisher"
+  member   = "serviceAccount:service-${data.google_project.current.number}@gcp-sa-logging.iam.gserviceaccount.com"
+}
+
+# Need to add explicit Workload Identity binding
+resource "google_service_account_iam_binding" "workload_identity_binding" {
+  service_account_id = google_service_account.filebeat_sa.name
+  role               = "roles/iam.workloadIdentityUser"
+  members            = [
+    "serviceAccount:${var.gcp_project}.svc.id.goog[${var.filebeat_namespace}/${var.filebeat_ksa_name}]"
+  ]
+}
+
+data "google_project" "current" {
+  project_id = var.gcp_project
+}
