@@ -151,24 +151,30 @@ variable "private_endpoints" {
   ]
 }
 
-variable "gcp_service_account_id" {
-  description = "GCP Service Account ID"
+variable "gcp_service_account_email" {
+  description = "Email of the GCP service account for Filebeat"
   type        = string
-  default     = "filebeat-sa"
 }
 
-variable "pubsub_topics" {
-  description = "List of PubSub topics to create"
-  type        = list(string)
-  default     = ["stackdriver-audit", "stackdriver-vpcflow", "stackdriver-firewall"]
+variable "gcp_credentials_file" {
+  description = "Path to the GCP credentials file for Filebeat"
+  type        = string
 }
 
-variable "pubsub_subscriptions" {
-  description = "Map of PubSub subscriptions to create"
-  type        = map(string)
-  default     = {
-    audit    = "audit-logs-sub"
-    vpcflow  = "filebeat-gcp-vpcflow"
-    firewall = "filebeat-gcp-firewall"
-  }
+variable "filebeat_namespace" {
+  description = "Kubernetes namespace for Filebeat resources"
+  type        = string
+  default     = "default"
+}
+
+variable "filebeat_ksa_name" {
+  description = "Name of the Kubernetes ServiceAccount for Filebeat"
+  type        = string
+  default     = "filebeat-ksa"
+}
+
+variable "filebeat_secret_name" {
+  description = "Name of the Kubernetes Secret for Filebeat credentials"
+  type        = string
+  default     = "filebeat-credentials"
 }

@@ -1,8 +1,8 @@
 # Kubernetes Service Account
 resource "kubernetes_service_account" "filebeat_ksa" {
   metadata {
-    name      = "filebeat-ksa"
-    namespace = "default"
+    name      = var.filebeat_ksa_name
+    namespace = var.filebeat_namespace
     annotations = {
       "iam.gke.io/gcp-service-account" = var.gcp_service_account_email
     }
@@ -37,15 +37,15 @@ resource "kubernetes_cluster_role_binding" "filebeat_binding" {
   subject {
     kind      = "ServiceAccount"
     name      = kubernetes_service_account.filebeat_ksa.metadata[0].name
-    namespace = "default"
+    namespace = var.filebeat_namespace
   }
 }
 
 # GCP Credentials Secret
 resource "kubernetes_secret" "filebeat_credentials" {
   metadata {
-    name      = "filebeat-gcp-credentials"
-    namespace = "default"
+    name      = var.filebeat_secret_name
+    namespace = var.filebeat_namespace
   }
 
   data = {
