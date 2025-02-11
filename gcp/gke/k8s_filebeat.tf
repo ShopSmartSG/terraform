@@ -1,7 +1,3 @@
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-
 # Kubernetes Service Account
 resource "kubernetes_service_account" "filebeat_ksa" {
   metadata {

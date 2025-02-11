@@ -1,12 +1,8 @@
-provider "google" {
-  project = var.project_id
-}
-
 # GCP Service Account
 resource "google_service_account" "filebeat_sa" {
   account_id   = var.gcp_service_account_id
   display_name = "Filebeat Service Account"
-  project      = var.project_id
+  project      = var.gcp_project
 }
 
 # IAM Roles
@@ -20,7 +16,7 @@ resource "google_project_iam_member" "filebeat_roles" {
     "roles/pubsub.subscriber",
     "roles/pubsub.viewer"
   ])
-  project = var.project_id
+  project = var.gcp_project
   role    = each.value
   member  = "serviceAccount:${google_service_account.filebeat_sa.email}"
 }
@@ -29,7 +25,7 @@ resource "google_project_iam_member" "filebeat_roles" {
 resource "google_pubsub_topic" "logging_topics" {
   for_each = toset(var.pubsub_topics)
   name     = each.value
-  project  = var.project_id
+  project  = var.gcp_project
 }
 
 # PubSub Subscriptions
@@ -37,7 +33,7 @@ resource "google_pubsub_subscription" "logging_subs" {
   for_each = var.pubsub_subscriptions
   name     = each.value
   topic    = google_pubsub_topic.logging_topics[each.key].name
-  project  = var.project_id
+  project  = var.gcp_project
   
   ack_deadline_seconds = 10
   message_retention_duration = "604800s"  # 7 days
@@ -50,7 +46,7 @@ resource "google_pubsub_subscription" "logging_subs" {
 resource "google_logging_project_sink" "sinks" {
   for_each = {
     audit = {
-      filter = "resource.type=\"k8s_cluster\" AND logName=\"projects/${var.project_id}/logs/cloudaudit.googleapis.com%2Factivity\""
+      filter = "resource.type=\"k8s_cluster\" AND logName=\"projects/${var.gcp_project}/logs/cloudaudit.googleapis.com%2Factivity\""
       topic = "stackdriver-audit"
     }
     vpc = {
@@ -64,7 +60,7 @@ resource "google_logging_project_sink" "sinks" {
   }
   
   name        = "${each.key}-logs-sink"
-  project     = var.project_id
+  project     = var.gcp_project
   destination = "pubsub.googleapis.com/${google_pubsub_topic.logging_topics[each.key].id}"
   filter      = each.value.filter
 }
