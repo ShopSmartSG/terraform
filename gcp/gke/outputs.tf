@@ -28,3 +28,13 @@ output "filebeat_secret" {
   description = "Name of the created secret"
   value       = kubernetes_secret.filebeat_credentials.metadata[0].name
 }
+
+output "gke_service_account_email" {
+  description = "GKE Service Account Email"
+  value       = var.gke_sa_email
+}
+
+output "gke_node_service_account_name" {
+  description = "GKE Node Service Account Name"
+  value       = var.gke_node_sa_name
+}
