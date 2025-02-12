@@ -26,18 +26,3 @@ variable "pubsub_subscriptions" {
   }
 }
 
-variable "gke_nodes_service_account" {
-  description = "GKE nodes service account configuration"
-  type = object({
-    account_id = string
-    display_name = string
-  })
-}
-
-variable "log_sinks" {
-  description = "Configuration for log sinks"
-  type = map(object({
-    filter = string
-    topic = string
-  }))
-}
