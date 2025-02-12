@@ -20,6 +20,10 @@ variable "private_endpoints" {
     "profile-service",
     "product-service",
     "order-service",
+    "login-service",
+    "delivery-service",
+    "utility-service",
+    "kibana",
     "central-hub"
   ]
 }

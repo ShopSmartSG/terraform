@@ -89,11 +89,6 @@ variable "gke_node_sa_name" {
     type        = string
 }
 
-# variable "managed_ssl_certificate_name" {
-#     description = "Managed SSL Certificate Name"
-#     type        = string
-# }
-
 
 variable "public_endpoints" {
   description = "List of public services exposed via GCLB"
@@ -124,10 +119,14 @@ variable "private_endpoints" {
       name       = "central-hub"
       port       = 82
     },
-    # {
-    #   name       = "profile-service"
-    #   port       = 80 //should match the one configured in the service.yml file in the actual service helm chart
-    # },
+    {
+      name       = "kibana"
+      port       = 5601
+    },
+    {
+      name       = "profile-service"
+      port       = 80
+    },
     # {
     #   name       = "product-service"
     #   port       = 95
@@ -149,4 +148,9 @@ variable "private_endpoints" {
     #   port       = 90
     # }
   ]
+}
+
+variable "ss_postgres_sa_email" {
+    description = "Service Account Email for Cloud SQL"
+    type        = string
 }

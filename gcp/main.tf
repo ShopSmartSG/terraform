@@ -38,6 +38,7 @@ module "vpc" {
 module "iam" {
   source = "./iam"
     gcp_project = var.gcp_project
+    ss_postgres_cloudsql_ksa_name = module.gke.ss_postgres_ksa_name
 }
 
 module "gke" {
@@ -51,7 +52,7 @@ module "gke" {
     private_subnet_name = module.vpc.private_subnet_name
     gke_sa_email = module.iam.gke_service_account_email
     gke_node_sa_name = module.iam.gke_node_sa_name
-    # managed_ssl_certificate_name = module.dns.managed_ssl_cert_name
+    ss_postgres_sa_email = module.iam.postgres_sa_email
 }
 
 module "dns" {
@@ -62,4 +63,14 @@ module "dns" {
   public_ingress_static_ip = module.gke.public_ingress_static_global_ip
   private_ingress_ip = module.gke.private_ingress_static_ip
   private_subnet_id = module.vpc.private_subnet
+}
+
+module "cloudsql" {
+  source = "./cloudsql"
+  gcp_project = var.gcp_project
+  gcp_region = var.gcp_region
+  gcp_zone = var.gcp_zone
+  vpc_id = module.vpc.vpc_id
+  vpc_self_link = module.vpc.vpc_self_link
+  postgres_cloudsql_sa_email = module.iam.postgres_sa_email
 }
