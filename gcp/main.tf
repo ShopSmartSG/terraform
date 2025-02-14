@@ -53,6 +53,7 @@ module "gke" {
     gke_sa_email = module.iam.gke_service_account_email
     gke_node_sa_name = module.iam.gke_node_sa_name
     ss_postgres_sa_email = module.iam.postgres_sa_email
+    ss_redis_server_ca_pem = module.memorystore.ss_redis_memstore_ca_cert_pem
 }
 
 module "dns" {
@@ -63,6 +64,7 @@ module "dns" {
   public_ingress_static_ip = module.gke.public_ingress_static_global_ip
   private_ingress_ip = module.gke.private_ingress_static_ip
   private_subnet_id = module.vpc.private_subnet
+  ss_redis_host = module.memorystore.ss_redis_instance_host
 }
 
 module "cloudsql" {
@@ -73,4 +75,12 @@ module "cloudsql" {
   vpc_id = module.vpc.vpc_id
   vpc_self_link = module.vpc.vpc_self_link
   postgres_cloudsql_sa_email = module.iam.postgres_sa_email
+}
+
+module "memorystore" {
+  source = "./memorystore"
+  gcp_project = var.gcp_project
+  gcp_region = var.gcp_region
+  gcp_zone = var.gcp_zone
+  vpc_self_link = module.vpc.vpc_self_link
 }

@@ -7,3 +7,14 @@ resource "kubernetes_service_account" "ss_postgres_ksa" {
     }
   }
 }
+
+resource "kubernetes_secret" "redis_ca_cert" {
+  metadata {
+    name      = "redis-ca-cert"
+    namespace = "default"
+  }
+  data = {
+    "redis-ca.pem" = var.ss_redis_server_ca_pem
+  }
+  type = "Opaque"
+}

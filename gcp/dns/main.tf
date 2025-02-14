@@ -54,3 +54,12 @@ resource "google_dns_record_set" "private_service_endpoints" {
   rrdatas = [var.private_ingress_ip]
 }
 // in case other endpoints to be supported, like for redis or postgresdb or mongo, use rrdata as var.private_subnet_id
+resource "google_dns_record_set" "ss_redis_endpoint" {
+
+  name         = "redis.${google_dns_managed_zone.ss_private.dns_name}"
+  type         = "A"
+  ttl          = 300
+  managed_zone = google_dns_managed_zone.ss_private.name
+
+  rrdatas = [var.ss_redis_host]
+}

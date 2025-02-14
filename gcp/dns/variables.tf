@@ -57,3 +57,7 @@ variable "private_subnet_id" {
     type        = string
 }
 
+variable "ss_redis_host" {
+    description = "Redis host"
+    type        = string
+}
