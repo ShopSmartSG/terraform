@@ -3,6 +3,11 @@ variable "gcp_project" {
   type        = string
 }
 
+variable "ss_postgres_cloudsql_ksa_name" {
+    description = "Kubernetes Service Account Name for PostgreSQL Cloud SQL"
+    type        = string
+}
+
 
 variable "gcp_service_account_id" {
   description = "GCP Service Account ID"

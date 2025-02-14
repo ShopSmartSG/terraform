@@ -1,9 +1,15 @@
-resource "google_compute_global_address" "public_lb_ip" {
-  name         = "shopsmartsg-public-lb-ip"
-  description  = "Static IP address for public ingress"
-  purpose      = "VIP"
-  address_type = "EXTERNAL"
+locals {
+  ssl_managed_cert_name = "shopsmartsg-public-cert"
+  static_public_ingress_ip_name = "shopsmart-public-ingress-ip"
 }
+
+# this is no longer needed as the IP was manually set in GCP console and we are directly referencing it in the ingress
+# resource "google_compute_global_address" "public_lb_ip" {
+#   name         = "shopsmartsg-public-lb-ip"
+#   description  = "Static IP address for public ingress"
+#   purpose      = "VIP"
+#   address_type = "EXTERNAL"
+# }
 
 # Public Ingress Setup
 resource "kubernetes_ingress_v1" "public_ingress" {
@@ -12,8 +18,9 @@ resource "kubernetes_ingress_v1" "public_ingress" {
     namespace = "default"
     annotations = {
       "kubernetes.io/ingress.class" = "gce"
-      "kubernetes.io/ingress.global-static-ip-name" = google_compute_global_address.public_lb_ip.name
-      "networking.gke.io/managed-certificates" = var.managed_ssl_certificate_name
+      "kubernetes.io/ingress.global-static-ip-name" = local.static_public_ingress_ip_name
+      # "kubernetes.io/ingress.global-static-ip-name" = google_compute_global_address.public_lb_ip.name
+      "networking.gke.io/managed-certificates" = local.ssl_managed_cert_name
     }
   }
 
@@ -50,6 +57,24 @@ resource "kubernetes_ingress_v1" "public_ingress" {
           number = 82
         }
       }
+    }
+  }
+}
+
+resource "kubernetes_manifest" "managed_certificate" {
+  manifest = {
+    "apiVersion" = "networking.gke.io/v1"
+    "kind"       = "ManagedCertificate"
+    "metadata" = {
+      "name"      = local.ssl_managed_cert_name
+      "namespace" = "default"
+    }
+    "spec" = {
+      "domains" = [
+        "central-hub.shopsmartsg.com",
+        "kibana.shopsmartsg.com"
+        # "shopsmartsg.com"
+      ]
     }
   }
 }

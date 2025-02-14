@@ -20,6 +20,10 @@ variable "private_endpoints" {
     "profile-service",
     "product-service",
     "order-service",
+    "login-service",
+    "delivery-service",
+    "utility-service",
+    "kibana",
     "central-hub"
   ]
 }
@@ -53,3 +57,7 @@ variable "private_subnet_id" {
     type        = string
 }
 
+variable "ss_redis_host" {
+    description = "Redis host"
+    type        = string
+}

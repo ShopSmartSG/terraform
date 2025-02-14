@@ -11,12 +11,16 @@ output "node_pools" {
 }
 
 output "public_ingress_static_global_ip" {
-  # value = data.kubernetes_ingress_v1.public_ingress.status.0.load_balancer.0.ingress.0.ip
-  value = google_compute_global_address.public_lb_ip.address
+  value = data.kubernetes_ingress_v1.public_ingress.status.0.load_balancer.0.ingress.0.ip
+  # value = google_compute_global_address.public_lb_ip.address
 }
 
 output "private_ingress_static_ip" {
   value = data.kubernetes_ingress_v1.private_ingress.status.0.load_balancer.0.ingress.0.ip
+}
+
+output "ss_postgres_ksa_name"{
+    value = kubernetes_service_account.ss_postgres_ksa.metadata.0.name
 }
 
 output "filebeat_service_account" {
