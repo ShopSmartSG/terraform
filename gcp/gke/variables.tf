@@ -159,3 +159,8 @@ variable "ss_redis_server_ca_pem" {
     description = "Redis Server CA PEM"
     type        = string
 }
+
+variable "gcp_filebeat_sa_email" {
+  description = "Email of the GCP service account for Filebeat"
+  type        = string
+}
