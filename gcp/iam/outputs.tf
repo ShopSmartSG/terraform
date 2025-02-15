@@ -10,12 +10,7 @@ output "postgres_sa_email" {
   value = google_service_account.ss_cloudsql_postgres_sa.email
 }
 
-output "service_account_email" {
-  description = "Email of the created service account"
+output "filebeat_sa_email" {
+  description = "Email of the created filebeat service account"
   value       = google_service_account.filebeat_sa.email
-}
-
-output "pubsub_topics" {
-  description = "Created PubSub topics"
-  value       = { for k, v in google_pubsub_topic.logging_topics : k => v.name }
 }

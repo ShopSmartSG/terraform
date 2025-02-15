@@ -23,22 +23,7 @@ output "ss_postgres_ksa_name"{
     value = kubernetes_service_account.ss_postgres_ksa.metadata.0.name
 }
 
-output "filebeat_service_account" {
+output "filebeat_ksa_name" {
   description = "Name of the created Kubernetes service account"
   value       = kubernetes_service_account.filebeat_ksa.metadata[0].name
-}
-
-output "filebeat_secret" {
-  description = "Name of the created secret"
-  value       = kubernetes_secret.filebeat_credentials.metadata[0].name
-}
-
-output "gke_service_account_email" {
-  description = "GKE Service Account Email"
-  value       = var.gke_sa_email
-}
-
-output "gke_node_service_account_name" {
-  description = "GKE Node Service Account Name"
-  value       = var.gke_node_sa_name
 }

@@ -39,6 +39,7 @@ module "iam" {
   source = "./iam"
     gcp_project = var.gcp_project
     ss_postgres_cloudsql_ksa_name = module.gke.ss_postgres_ksa_name
+    filebeat_kube_service_acc_name = module.gke.filebeat_ksa_name
 }
 
 module "gke" {
@@ -54,6 +55,7 @@ module "gke" {
     gke_node_sa_name = module.iam.gke_node_sa_name
     ss_postgres_sa_email = module.iam.postgres_sa_email
     ss_redis_server_ca_pem = module.memorystore.ss_redis_memstore_ca_cert_pem
+    gcp_filebeat_sa_email = module.iam.filebeat_sa_email
 }
 
 module "dns" {

@@ -1,6 +1,15 @@
+locals {
+  pubsub_topics = ["stackdriver-audit", "stackdriver-vpcflow", "stackdriver-firewall"]
+  pubsub_subscriptions = {
+    audit    = "audit-logs-sub"
+    vpcflow  = "filebeat-gcp-vpcflow"
+    firewall = "filebeat-gcp-firewall"
+  }
+}
+
 # GCP Service Account
 resource "google_service_account" "filebeat_sa" {
-  account_id   = var.gcp_service_account_id
+  account_id   = "filebeat-sa"
   display_name = "Filebeat Service Account"
   project      = var.gcp_project
 }
@@ -23,16 +32,16 @@ resource "google_project_iam_member" "filebeat_roles" {
 
 # PubSub Topics
 resource "google_pubsub_topic" "logging_topics" {
-  for_each = toset(var.pubsub_topics)
+  for_each = toset(local.pubsub_topics)
   name     = each.value
   project  = var.gcp_project
 }
 
 # PubSub Subscriptions
 resource "google_pubsub_subscription" "logging_subs" {
-  for_each = var.pubsub_subscriptions
+  for_each = tomap(local.pubsub_subscriptions)
   name     = each.value
-  topic    = google_pubsub_topic.logging_topics[each.key].name
+  topic    = google_pubsub_topic.logging_topics["stackdriver-${each.key}"].id
   project  = var.gcp_project
   
   ack_deadline_seconds = 10
@@ -61,13 +70,13 @@ resource "google_logging_project_sink" "sinks" {
   
   name        = "${each.key}-logs-sink"
   project     = var.gcp_project
-  destination = "pubsub.googleapis.com/${google_pubsub_topic.logging_topics[each.key].id}"
+  destination = "pubsub.googleapis.com/${google_pubsub_topic.logging_topics[each.value.topic].id}"
   filter      = each.value.filter
 }
 
 # Need to add this to grant publisher permissions to Log Router Service Account
 resource "google_pubsub_topic_iam_member" "log_router_publisher" {
-  for_each = toset(var.pubsub_topics)
+  for_each = toset(local.pubsub_topics)
   project  = var.gcp_project
   topic    = google_pubsub_topic.logging_topics[each.key].name
   role     = "roles/pubsub.publisher"
@@ -75,11 +84,11 @@ resource "google_pubsub_topic_iam_member" "log_router_publisher" {
 }
 
 # Need to add explicit Workload Identity binding
-resource "google_service_account_iam_binding" "workload_identity_binding" {
+resource "google_service_account_iam_binding" "filebeat_workload_identity_binding" {
   service_account_id = google_service_account.filebeat_sa.name
   role               = "roles/iam.workloadIdentityUser"
   members            = [
-    "serviceAccount:${var.gcp_project}.svc.id.goog[${var.filebeat_namespace}/${var.filebeat_ksa_name}]"
+    "serviceAccount:${var.gcp_project}.svc.id.goog[default/${var.filebeat_kube_service_acc_name}]"
   ]
 }
 

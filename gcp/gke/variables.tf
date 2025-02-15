@@ -160,30 +160,7 @@ variable "ss_redis_server_ca_pem" {
     type        = string
 }
 
-variable "gcp_service_account_email" {
+variable "gcp_filebeat_sa_email" {
   description = "Email of the GCP service account for Filebeat"
   type        = string
-}
-
-variable "gcp_credentials_file" {
-  description = "Path to the GCP credentials file for Filebeat"
-  type        = string
-}
-
-variable "filebeat_namespace" {
-  description = "Kubernetes namespace for Filebeat resources"
-  type        = string
-  default     = "default"
-}
-
-variable "filebeat_ksa_name" {
-  description = "Name of the Kubernetes ServiceAccount for Filebeat"
-  type        = string
-  default     = "filebeat-ksa"
-}
-
-variable "filebeat_secret_name" {
-  description = "Name of the Kubernetes Secret for Filebeat credentials"
-  type        = string
-  default     = "filebeat-credentials"
 }
