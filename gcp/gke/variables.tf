@@ -1,3 +1,9 @@
+locals {
+  ssl_managed_cert_name_public_ingress = "shopsmartsg-public-cert"
+  ssl_managed_cert_name_private_ingress = "shopsmartsg-private-cert"
+  static_public_ingress_ip_name = "shopsmart-public-ingress-ip"
+}
+
 variable "gcp_project" {
   description = "GCP Project ID"
   type        = string
@@ -48,31 +54,31 @@ variable "node_pools" {
   default = [
     {
       name          = "shopsmart1"
-      machine_type  = "e2-standard-4"
+      machine_type  = "e2-standard-2"
       min_count     = 1
       max_count     = 2
       desired_count = 1
-      disk_size_gb  = 50
+      disk_size_gb  = 20
       tags          = ["general"]
       labels        = { "purpose" = "general", "ng_id" = "ss1", "service" = "true" }
     },
     {
       name          = "ss-elk"
-      machine_type  = "e2-standard-4"
+      machine_type  = "e2-standard-2"
       min_count     = 1
       max_count     = 2
       desired_count = 1
-      disk_size_gb  = 50
+      disk_size_gb  = 20
       tags          = ["general"]
       labels        = { "purpose" = "elk", "set" = "ss-elk" }
     },
     {
       name          = "compute-pool"
-      machine_type  = "e2-highcpu-8"
+      machine_type  = "e2-highcpu-4"
       min_count     = 0
       max_count     = 0
       desired_count = 0
-      disk_size_gb  = 100
+      disk_size_gb  = 20
       tags          = ["compute"]
       labels        = { "purpose" = "compute", "ng_id" = "ss2" }
     }
@@ -82,6 +88,11 @@ variable "node_pools" {
 variable "gke_sa_email" {
   description = "GKE Service Account Email"
   type        = string
+}
+
+variable "gke_node_sa_id"{
+    description = "GKE Node Service Account ID"
+    type        = string
 }
 
 variable "gke_node_sa_name" {
@@ -100,11 +111,11 @@ variable "public_endpoints" {
     {
       name       = "central-hub"
       port       = 82
-    },
-    {
-      name       = "kibana"
-      port       = 5601
     }
+    # {
+    #   name       = "kibana"
+    #   port       = 5601
+    # }
   ]
 }
 
@@ -119,10 +130,10 @@ variable "private_endpoints" {
       name       = "central-hub"
       port       = 82
     },
-    {
-      name       = "kibana"
-      port       = 5601
-    },
+    # {
+    #   name       = "kibana"
+    #   port       = 5601
+    # },
     {
       name       = "profile-service"
       port       = 80

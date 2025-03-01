@@ -31,12 +31,18 @@ resource "google_sql_database_instance" "ss_postgres_instance" {
 
   depends_on = [google_service_networking_connection.private_vpc_sql_connection]
 
+  lifecycle {
+    prevent_destroy = false
+  }
+
   settings {
     tier = "db-perf-optimized-N-2"
+    disk_size = 50
     ip_configuration {
       ipv4_enabled                                  = false
       private_network                               = var.vpc_self_link
       enable_private_path_for_google_cloud_services = true
+      ssl_mode = "TRUSTED_CLIENT_CERTIFICATE_REQUIRED"
     }
 
     database_flags {
@@ -53,6 +59,11 @@ resource "google_sql_database" "ss_cloudsql_postgres_prod_db" {
 
 resource "google_sql_database" "ss_cloudsql_postgres_profile_db" {
   name     = "profile"
+  instance = google_sql_database_instance.ss_postgres_instance.name
+}
+
+resource "google_sql_database" "ss_cloudsql_postgres_delivery_db" {
+  name     = "delivery"
   instance = google_sql_database_instance.ss_postgres_instance.name
 }
 

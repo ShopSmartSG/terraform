@@ -1,6 +1,7 @@
 resource "google_container_cluster" "gke_cluster" {
   name     = "shopsmartsg-cluster"
-  location = var.gcp_region
+  # location = var.gcp_region
+  location = var.gcp_zone
   network  = var.vpc_name
   subnetwork = var.private_subnet_name
 
@@ -23,9 +24,12 @@ resource "google_container_node_pool" "node_pools" {
   for_each = { for pool in var.node_pools : pool.name => pool }
 
   name       = each.value.name
-  location   = var.gcp_region
+  # location   = var.gcp_region
+  location   = var.gcp_zone
   cluster    = google_container_cluster.gke_cluster.name
   node_count = each.value.desired_count
+
+  depends_on = [google_container_cluster.gke_cluster]
 
   # autoscaling {
   #   min_node_count = each.value.min_count
@@ -49,7 +53,8 @@ resource "google_container_node_pool" "node_pools" {
 
 # IAM Binding for Workload Identity across all node pools
 resource "google_service_account_iam_binding" "gke_workload_identity_binding" {
-  service_account_id = var.gke_node_sa_name
+  # service_account_id = var.gke_node_sa_name
+  service_account_id = var.gke_node_sa_id
   role               = "roles/iam.workloadIdentityUser"
 
   members = [for pool in var.node_pools :
