@@ -6,6 +6,12 @@ provider "google" {
   credentials = file(var.gcp_cred)
 }
 
+provider "google-beta" {
+  project = var.gcp_project
+  region  = var.gcp_region
+  zone = var.gcp_zone
+}
+
 variable "gcp_region" {
     description = "GCP region to deploy resources"
     type        = string

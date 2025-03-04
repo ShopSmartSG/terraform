@@ -35,6 +35,11 @@ resource "google_project_iam_member" "gke_monitoring" {
 #   role    = "roles/iam.workloadIdentityUser"
 #   member  = "serviceAccount:${google_service_account.gke_nodes.email}"
 # }
+resource "google_project_iam_member" "gke_workload_identity_user" {
+  project = var.gcp_project
+  role    = "roles/iam.workloadIdentityUser"
+  member  = "serviceAccount:${var.gcp_project}.svc.id.goog[default/default-sa]"
+}
 
 resource "google_service_account_iam_binding" "gke_workload_identity_binding" {
   service_account_id = google_service_account.gke_nodes.name

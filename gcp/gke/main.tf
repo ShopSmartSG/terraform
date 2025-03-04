@@ -13,6 +13,9 @@ resource "google_container_cluster" "gke_cluster" {
   workload_identity_config {
     workload_pool = "${var.gcp_project}.svc.id.goog"
   }
+  secret_manager_config {
+    enabled = true
+  }
   addons_config {
     http_load_balancing {
       disabled = false  # Enables the HTTP Load Balancing (Ingress) controller
@@ -44,6 +47,10 @@ resource "google_container_node_pool" "node_pools" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
+
+    workload_metadata_config {
+      mode = "GKE_METADATA"
+    }
 
     service_account = var.gke_sa_email
     tags            = each.value.tags
