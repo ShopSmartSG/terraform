@@ -91,6 +91,20 @@ resource "google_service_account_iam_binding" "order_service_workload_identity_b
   ]
 }
 
+resource "google_service_account" "utility_service_sa" {
+  account_id   = "utility-service-sa"
+  display_name = "Utility-service GCP Service Account"
+  project      = var.gcp_project
+}
+
+resource "google_service_account_iam_binding" "util_service_workload_identity_binding" {
+  service_account_id = google_service_account.utility_service_sa.name
+  role    = "roles/iam.workloadIdentityUser"
+  members  = [
+    "serviceAccount:${var.gcp_project}.svc.id.goog[default/utility-service-ksa]"
+  ]
+}
+
 
 resource "google_service_account" "kibana_sa" {
   account_id   = "kibana-sa"
@@ -123,19 +137,3 @@ resource "google_service_account_iam_binding" "kibana_workload_identity_binding"
 #   role    = "roles/secretmanager.secretAccessor"
 #   member  = each.value
 # }
-
-resource "google_project_iam_member" "services_cloudsql_sa_clients" {
-  for_each = toset([
-    "serviceAccount:${google_service_account.delivery_service_sa.email}",
-    "serviceAccount:${google_service_account.profile_service_sa.email}"
-    "serviceAccount:${google_service_account.product_service_sa.email}"
-    "serviceAccount:${google_service_account.order_service_sa.email}"
-    "serviceAccount:${google_service_account.login_service_sa.email}"
-    "serviceAccount:${google_service_account.central_hub_sa.email}"
-    "serviceAccount:${google_service_account.kibana_sa.email}"
-  ])
-
-  project = var.gcp_project
-  role    = "roles/cloudsql.client"
-  member  = each.value
-}
