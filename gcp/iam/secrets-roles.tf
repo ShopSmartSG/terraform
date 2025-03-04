@@ -33,25 +33,22 @@ resource "google_service_account_iam_binding" "del_service_workload_identity_bin
   ]
 }
 
-
-
-resource "google_service_account" "login_service_sa" {
-  account_id   = "login-service-sa"
-  display_name = "Login-service GCP Service Account"
+resource "google_service_account" "product_service_sa" {
+  account_id   = "product-service-sa"
+  display_name = "Product-service GCP Service Account"
   project      = var.gcp_project
 }
 
-resource "google_service_account_iam_binding" "login_service_workload_identity_binding" {
-  service_account_id = google_service_account.login_service_sa.name
+resource "google_service_account_iam_binding" "product_service_workload_identity_binding" {
+  service_account_id = google_service_account.product_service_sa.name
   role    = "roles/iam.workloadIdentityUser"
   members  = [
-    "serviceAccount:${var.gcp_project}.svc.id.goog[default/login-service-ksa]"
+    "serviceAccount:${var.gcp_project}.svc.id.goog[default/product-service-ksa]"
   ]
 }
 
-
 resource "google_service_account" "central_hub_sa" {
-  account_id   = "central_hub-sa"
+  account_id   = "central-hub-sa"
   display_name = "ShopsmartSG Backend GCP Service Account"
   project      = var.gcp_project
 }
@@ -65,17 +62,17 @@ resource "google_service_account_iam_binding" "central_hub_service_workload_iden
 }
 
 
-resource "google_service_account" "product_service_sa" {
-  account_id   = "product-service-sa"
-  display_name = "Product-service GCP Service Account"
+resource "google_service_account" "login_service_sa" {
+  account_id   = "login-service-sa"
+  display_name = "Login-service GCP Service Account"
   project      = var.gcp_project
 }
 
-resource "google_service_account_iam_binding" "product_service_workload_identity_binding" {
-  service_account_id = google_service_account.product_service_sa.name
+resource "google_service_account_iam_binding" "login_service_workload_identity_binding" {
+  service_account_id = google_service_account.login_service_sa.name
   role    = "roles/iam.workloadIdentityUser"
   members  = [
-    "serviceAccount:${var.gcp_project}.svc.id.goog[default/product-service-ksa]"
+    "serviceAccount:${var.gcp_project}.svc.id.goog[default/login-service-ksa]"
   ]
 }
 
