@@ -1,57 +1,40 @@
 provider "google-beta" {
-  region = var.gcp_region
-  zone   = var.gcp_zone
+  region  = var.gcp_region
+  zone    = var.gcp_zone
   project = var.gcp_project
 }
 
 resource "google_compute_global_address" "cloudsql_private_ip_range" {
-  provider = google-beta
-
-  name          = "cloudsql-private-ip"
-  purpose       = "VPC_PEERING"
-  address_type  = "INTERNAL"
-  prefix_length = 16
-  network       = var.vpc_id
+  provider       = google-beta
+  name           = "cloudsql-private-ip"
+  purpose        = "VPC_PEERING"
+  address_type   = "INTERNAL"
+  prefix_length  = 16
+  network        = var.vpc_id
 }
 
 resource "google_service_networking_connection" "private_vpc_sql_connection" {
-  provider = google-beta
-
-  network                 = var.vpc_id
-  service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.cloudsql_private_ip_range.name]
+  provider                 = google-beta
+  network                  = var.vpc_id
+  service                  = "servicenetworking.googleapis.com"
+  reserved_peering_ranges  = [google_compute_global_address.cloudsql_private_ip_range.name]
 }
 
+# Primary Cloud SQL Instance
 resource "google_sql_database_instance" "ss_postgres_instance" {
-  provider = google-beta
-
-  name             = "shopsmart-sqldb"
-  region           = var.gcp_region
-  database_version = "POSTGRES_17"
+  provider          = google-beta
+  name              = "shopsmart-sqldb"
+  region            = var.gcp_region
+  database_version  = "POSTGRES_17"
 
   depends_on = [google_service_networking_connection.private_vpc_sql_connection]
 
   lifecycle {
     prevent_destroy = false
   }
-
-  settings {
-    tier = "db-perf-optimized-N-2"
-    disk_size = 50
-    ip_configuration {
-      ipv4_enabled                                  = false
-      private_network                               = var.vpc_self_link
-      enable_private_path_for_google_cloud_services = true
-      ssl_mode = "TRUSTED_CLIENT_CERTIFICATE_REQUIRED"
-    }
-
-    database_flags {
-      name  = "cloudsql.iam_authentication"
-      value = "on"
-    }
-  }
 }
 
+# Primary Databases
 resource "google_sql_database" "ss_cloudsql_postgres_prod_db" {
   name     = "shopsmartdb"
   instance = google_sql_database_instance.ss_postgres_instance.name
@@ -67,17 +50,43 @@ resource "google_sql_database" "ss_cloudsql_postgres_delivery_db" {
   instance = google_sql_database_instance.ss_postgres_instance.name
 }
 
+#Replicas
+resource "google_sql_database_instance" "ss_postgres_replica_prod" {
+  provider            = google-beta
+  name               = "shopsmart-replica"
+  region             = var.gcp_region
+  database_version   = "POSTGRES_17"
+  master_instance_name = google_sql_database_instance.ss_postgres_instance.name
+}
+
+resource "google_sql_database_instance" "ss_postgres_replica_profile" {
+  provider            = google-beta
+  name               = "profile-replica"
+  region             = var.gcp_region
+  database_version   = "POSTGRES_17"
+  master_instance_name = google_sql_database_instance.ss_postgres_instance.name
+}
+
+resource "google_sql_database_instance" "ss_postgres_replica_delivery" {
+  provider            = google-beta
+  name               = "delivery-replica"
+  region             = var.gcp_region
+  database_version   = "POSTGRES_17"
+  master_instance_name = google_sql_database_instance.ss_postgres_instance.name
+}
+
+# Users
 resource "google_sql_user" "iam_user" {
   name     = "tester1hello@gmail.com"
   instance = google_sql_database_instance.ss_postgres_instance.name
   type     = "CLOUD_IAM_USER"
 }
 
-# resource "google_sql_user" "iam_service_account_user" {
-#   name     = trimsuffix(var.postgres_cloudsql_sa_email, ".gserviceaccount.com")
-#   instance = google_sql_database_instance.ss_postgres_instance.name
-#   type     = "CLOUD_IAM_SERVICE_ACCOUNT"
-# }
+resource "google_sql_user" "iam_service_account_user" {
+  name     = trimsuffix(var.postgres_cloudsql_sa_email, ".gserviceaccount.com")
+  instance = google_sql_database_instance.ss_postgres_instance.name
+  type     = "CLOUD_IAM_SERVICE_ACCOUNT"
+}
 
 resource "google_sql_user" "users" {
   name     = "ssadmin"
