@@ -138,26 +138,26 @@ variable "private_endpoints" {
       name       = "profile-service"
       port       = 80
     },
-    # {
-    #   name       = "product-service"
-    #   port       = 95
-    # },
+    {
+      name       = "product-service"
+      port       = 95
+    },
     {
       name       = "order-service"
       port       = 85
-    }
-    # {
-    #   name       = "delivery-service"
-    #   port       = 92
-    # },
+    },
+    {
+      name       = "delivery-service"
+      port       = 92
+    },
     # {
     #   name       = "login-service"
     #   port       = 98
     # },
-    # {
-    #   name       = "utility-service"
-    #   port       = 90
-    # }
+    {
+      name       = "utility-service"
+      port       = 90
+    }
   ]
 }
 
