@@ -19,9 +19,9 @@ output "private_ingress_static_ip" {
   value = data.kubernetes_ingress_v1.private_ingress.status.0.load_balancer.0.ingress.0.ip
 }
 
-output "ss_postgres_ksa_name"{
-    value = kubernetes_service_account.ss_postgres_ksa.metadata.0.name
-}
+# output "ss_postgres_ksa_name"{
+#     value = kubernetes_service_account.ss_postgres_ksa.metadata.0.name
+# }
 
 output "filebeat_ksa_name" {
   description = "Name of the created Kubernetes service account"

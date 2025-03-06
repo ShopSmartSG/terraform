@@ -44,7 +44,7 @@ module "vpc" {
 module "iam" {
   source = "./iam"
     gcp_project = var.gcp_project
-    ss_postgres_cloudsql_ksa_name = module.gke.ss_postgres_ksa_name
+    # ss_postgres_cloudsql_ksa_name = module.gke.ss_postgres_ksa_name
     filebeat_kube_service_acc_name = module.gke.filebeat_ksa_name
 }
 
@@ -60,7 +60,7 @@ module "gke" {
     gke_sa_email = module.iam.gke_service_account_email
     gke_node_sa_name = module.iam.gke_node_sa_name
     gke_node_sa_id = module.iam.gke_node_sa_id
-    ss_postgres_sa_email = module.iam.postgres_sa_email
+    # ss_postgres_sa_email = module.iam.postgres_sa_email
     ss_redis_server_ca_pem = module.memorystore.ss_redis_memstore_ca_cert_pem
     gcp_filebeat_sa_email = module.iam.filebeat_sa_email
 }
@@ -83,7 +83,7 @@ module "cloudsql" {
   gcp_zone = var.gcp_zone
   vpc_id = module.vpc.vpc_id
   vpc_self_link = module.vpc.vpc_self_link
-  postgres_cloudsql_sa_email = module.iam.postgres_sa_email
+  # postgres_cloudsql_sa_email = module.iam.postgres_sa_email
 }
 
 module "memorystore" {

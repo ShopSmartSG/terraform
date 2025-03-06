@@ -73,11 +73,11 @@ resource "google_sql_user" "iam_user" {
   type     = "CLOUD_IAM_USER"
 }
 
-resource "google_sql_user" "iam_service_account_user" {
-  name     = trimsuffix(var.postgres_cloudsql_sa_email, ".gserviceaccount.com")
-  instance = google_sql_database_instance.ss_postgres_instance.name
-  type     = "CLOUD_IAM_SERVICE_ACCOUNT"
-}
+# resource "google_sql_user" "iam_service_account_user" {
+#   name     = trimsuffix(var.postgres_cloudsql_sa_email, ".gserviceaccount.com")
+#   instance = google_sql_database_instance.ss_postgres_instance.name
+#   type     = "CLOUD_IAM_SERVICE_ACCOUNT"
+# }
 
 resource "google_sql_user" "users" {
   name     = "ssadmin"

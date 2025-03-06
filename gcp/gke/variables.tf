@@ -161,10 +161,10 @@ variable "private_endpoints" {
   ]
 }
 
-variable "ss_postgres_sa_email" {
-    description = "Service Account Email for Cloud SQL"
-    type        = string
-}
+# variable "ss_postgres_sa_email" {
+#     description = "Service Account Email for Cloud SQL"
+#     type        = string
+# }
 
 variable "ss_redis_server_ca_pem" {
     description = "Redis Server CA PEM"

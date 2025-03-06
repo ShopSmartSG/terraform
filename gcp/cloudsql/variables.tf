@@ -23,7 +23,7 @@ variable "gcp_zone" {
     type        = string
 }
 
-variable "postgres_cloudsql_sa_email" {
-    description = "The email of the Cloud SQL service account"
-    type        = string
-}
+# variable "postgres_cloudsql_sa_email" {
+#     description = "The email of the Cloud SQL service account"
+#     type        = string
+# }
