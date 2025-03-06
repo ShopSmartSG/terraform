@@ -52,6 +52,7 @@ resource "google_sql_database_instance" "ss_postgres_instance" {
   }
 }
 
+# Primary Databases
 resource "google_sql_database" "ss_cloudsql_postgres_prod_db" {
   name     = "shopsmartdb"
   instance = google_sql_database_instance.ss_postgres_instance.name
@@ -67,6 +68,32 @@ resource "google_sql_database" "ss_cloudsql_postgres_delivery_db" {
   instance = google_sql_database_instance.ss_postgres_instance.name
 }
 
+# Replica Databases
+resource "google_sql_database_instance" "ss_postgres_replica_prod" {
+  provider            = google-beta
+  name               = "shopsmart-replica"
+  region             = var.gcp_region
+  database_version   = "POSTGRES_17"
+  master_instance_name = google_sql_database_instance.ss_postgres_instance.name
+}
+
+resource "google_sql_database_instance" "ss_postgres_replica_profile" {
+  provider            = google-beta
+  name               = "profile-replica"
+  region             = var.gcp_region
+  database_version   = "POSTGRES_17"
+  master_instance_name = google_sql_database_instance.ss_postgres_instance.name
+}
+
+resource "google_sql_database_instance" "ss_postgres_replica_delivery" {
+  provider            = google-beta
+  name               = "delivery-replica"
+  region             = var.gcp_region
+  database_version   = "POSTGRES_17"
+  master_instance_name = google_sql_database_instance.ss_postgres_instance.name
+}
+
+# Users
 resource "google_sql_user" "iam_user" {
   name     = "tester1hello@gmail.com"
   instance = google_sql_database_instance.ss_postgres_instance.name
