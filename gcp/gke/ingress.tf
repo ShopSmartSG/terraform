@@ -52,6 +52,25 @@ resource "kubernetes_ingress_v1" "public_ingress" {
         }
       }
     }
+
+    rule {
+      host = "profile-service.shopsmartsg.com"
+      http {
+        path {
+          path      = "/merchants/images/upload"
+          path_type = "ImplementationSpecific"
+          backend {
+            service {
+              name = "profile-service"
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+      }
+    }
+
     default_backend {
       service {
         name = "central-hub"

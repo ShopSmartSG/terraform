@@ -116,7 +116,8 @@ resource "google_service_account_iam_binding" "kibana_workload_identity_binding"
   service_account_id = google_service_account.kibana_sa.name
   role    = "roles/iam.workloadIdentityUser"
   members  = [
-    "serviceAccount:${var.gcp_project}.svc.id.goog[default/kibana-ksa]"
+    "serviceAccount:${var.gcp_project}.svc.id.goog[default/kibana-ksa]",
+    "serviceAccount:${var.gcp_project}.svc.id.goog[default/kibana-sa]"
   ]
 }
 

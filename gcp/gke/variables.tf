@@ -150,10 +150,10 @@ variable "private_endpoints" {
       name       = "delivery-service"
       port       = 92
     },
-    # {
-    #   name       = "login-service"
-    #   port       = 98
-    # },
+    {
+      name       = "login-service"
+      port       = 98
+    },
     {
       name       = "utility-service"
       port       = 90

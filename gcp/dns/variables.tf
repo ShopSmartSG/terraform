@@ -33,6 +33,7 @@ variable "public_endpoints" {
   type        = list(string)
   default     = [
     "central-hub",
+    "profile-service",
     "kibana"
   ]
 }

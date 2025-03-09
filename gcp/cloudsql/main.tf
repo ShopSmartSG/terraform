@@ -31,6 +31,14 @@ resource "google_sql_database_instance" "ss_postgres_instance" {
   settings {
     tier = "db-perf-optimized-N-2"
     disk_size = 50
+
+    backup_configuration {
+      enabled                         = true
+      start_time                      = "21:00"  # Adjust as needed (UTC)
+      transaction_log_retention_days  = 7
+      point_in_time_recovery_enabled = true
+    }
+
     ip_configuration {
       ipv4_enabled                                  = false
       private_network                               = var.vpc_self_link
