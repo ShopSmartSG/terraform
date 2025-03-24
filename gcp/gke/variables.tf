@@ -1,7 +1,7 @@
 locals {
   ssl_managed_cert_name_public_ingress = "shopsmartsg-public-cert"
   ssl_managed_cert_name_private_ingress = "shopsmartsg-private-cert"
-  static_public_ingress_ip_name = "shopsmart-public-ingress-ip"
+  static_public_ingress_ip_name = "shopsmart-public-ingress-ip" //create manually in gcp console in VPC Network / IP Addresses. Previous one : 34.107.247.139, premium tier, external type.
 }
 
 variable "gcp_project" {
