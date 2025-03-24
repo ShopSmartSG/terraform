@@ -59,7 +59,7 @@ variable "node_pools" {
       max_count     = 2
       desired_count = 1
       disk_size_gb  = 20
-      tags          = ["general"]
+      tags          = ["general", "shopsmart", "allow-smtp", "allow-ssh"]
       labels        = { "purpose" = "general", "ng_id" = "ss1", "service" = "true" }
     },
     {

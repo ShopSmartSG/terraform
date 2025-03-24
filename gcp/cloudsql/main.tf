@@ -51,12 +51,14 @@ resource "google_sql_database_instance" "ss_postgres_instance" {
       value = "on"
     }
   }
+  deletion_protection = false
 
   lifecycle {
     prevent_destroy = false
   }
 }
 
+# Primary Databases
 resource "google_sql_database" "ss_cloudsql_postgres_prod_db" {
   name     = "shopsmartdb"
   instance = google_sql_database_instance.ss_postgres_instance.name
@@ -70,6 +72,70 @@ resource "google_sql_database" "ss_cloudsql_postgres_profile_db" {
 resource "google_sql_database" "ss_cloudsql_postgres_delivery_db" {
   name     = "delivery"
   instance = google_sql_database_instance.ss_postgres_instance.name
+}
+
+# Replica Databases
+resource "google_sql_database_instance" "ss_postgres_replica_prod" {
+  provider            = google-beta
+  name               = "shopsmart-replica"
+  region             = var.gcp_region
+  database_version   = "POSTGRES_17"
+  master_instance_name = google_sql_database_instance.ss_postgres_instance.name
+  settings {
+    database_flags {
+      name  = "cloudsql.iam_authentication"
+      value = "on"
+    }
+    tier = "db-perf-optimized-N-2"
+    disk_size = 50
+    deletion_protection_enabled = false
+  }
+  deletion_protection = false
+  lifecycle {
+    prevent_destroy = false
+  }
+}
+
+resource "google_sql_database_instance" "ss_postgres_replica_profile" {
+  provider            = google-beta
+  name               = "profile-replica"
+  region             = var.gcp_region
+  database_version   = "POSTGRES_17"
+  master_instance_name = google_sql_database_instance.ss_postgres_instance.name
+  settings {
+    database_flags {
+      name  = "cloudsql.iam_authentication"
+      value = "on"
+    }
+    tier = "db-perf-optimized-N-2"
+    disk_size = 50
+    deletion_protection_enabled = false
+  }
+  deletion_protection = false
+  lifecycle {
+    prevent_destroy = false
+  }
+}
+
+resource "google_sql_database_instance" "ss_postgres_replica_delivery" {
+  provider            = google-beta
+  name               = "delivery-replica"
+  region             = var.gcp_region
+  database_version   = "POSTGRES_17"
+  master_instance_name = google_sql_database_instance.ss_postgres_instance.name
+  settings {
+    database_flags {
+      name  = "cloudsql.iam_authentication"
+      value = "on"
+    }
+    tier = "db-perf-optimized-N-2"
+    disk_size = 50
+    deletion_protection_enabled = false
+  }
+  deletion_protection = false
+  lifecycle {
+    prevent_destroy = false
+  }
 }
 
 resource "google_sql_user" "iam_user" {

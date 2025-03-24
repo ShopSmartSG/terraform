@@ -84,3 +84,27 @@ resource "google_compute_firewall" "allow_iap_ssh" {
   direction     = "INGRESS"
   priority      = 1000
 }
+
+resource "google_compute_firewall" "smtp-outbound" {
+  name                    = "shopsmart-smtp-outbound"
+  network                 = google_compute_network.vpc.self_link
+  description             = "Allow outbound SMTP traffic from GKE nodes"
+  direction = "EGRESS"
+  priority  = 1000
+
+  allow {
+    protocol = "tcp"
+    ports    = ["587", "465", "2525"]
+  }
+
+  target_tags = [
+    # Use the same tags defined in your node pools
+    "general",
+    "shopsmart",
+    "allow-smtp"
+  ]
+  destination_ranges = ["0.0.0.0/0"]
+
+  # Allow established connections back in
+  source_ranges = []
+}

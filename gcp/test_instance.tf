@@ -21,7 +21,7 @@ resource "google_compute_instance" "test_instance" {
   #   access_config {}
   # }
 
-  tags = ["allow-ssh"] # Match this tag in the firewall rule
+  tags = ["allow-ssh", "allow-smtp"] # Match this tag in the firewall rule
 }
 
 resource "google_compute_firewall" "ssh_firewall_test" {
